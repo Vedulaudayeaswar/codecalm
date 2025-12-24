@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather + Food - Smart Nutrition Advisor</title>
+    <link rel="stylesheet" href="../css/weatherfood.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Home Button -->
+    <button
+      class="home-button"
+      onclick="window.location.href='fitness.html'"
+      title="Back to Fitness Hub"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M9 22V12H15V22"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      Home
+    </button>
+
+    <!-- Initial Questions Screen -->
+    <div id="questions-screen" class="questions-screen">
+      <div class="questions-container">
+        <div class="bot-header">
+          <div class="weather-icons">
+            <div class="sun-icon">
+              <div class="sun-core"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+              <div class="sun-ray"></div>
+            </div>
+            <div class="cloud-icon">
+              <div class="cloud-main"></div>
+              <div class="cloud-puff cloud-puff-1"></div>
+              <div class="cloud-puff cloud-puff-2"></div>
+            </div>
+            <div class="food-icon">🍽️</div>
+          </div>
+          <h1>Weather + Food</h1>
+          <p class="subtitle">
+            Get smart nutrition advice based on real-time weather conditions
+          </p>
+        </div>
+
+        <div class="bot-intro">
+          <div class="bot-avatar"></div>
+          <p class="bot-message">
+            Hi! I'm your Weather + Food advisor. Let me help you eat better
+            based on today's conditions!
+          </p>
+        </div>
+
+        <div class="question-section">
+          <h3>Are you vegetarian or non-vegetarian?</h3>
+          <div class="button-group">
+            <button class="choice-button" data-choice="vegetarian">
+              <span class="icon">🌱</span>
+              <span class="label">Vegetarian</span>
+            </button>
+            <button class="choice-button" data-choice="non-vegetarian">
+              <span class="icon">🍖</span>
+              <span class="label">Non-Vegetarian</span>
+            </button>
+            <button class="choice-button" data-choice="eggetarian">
+              <span class="icon">🥚</span>
+              <span class="label">Eggetarian</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="question-section" style="display: none" id="goal-section">
+          <h3>What's your primary fitness goal?</h3>
+          <div class="button-group">
+            <button class="choice-button" data-choice="muscle gain">
+              <span class="icon">💪</span>
+              <span class="label">Muscle Gain</span>
+            </button>
+            <button class="choice-button" data-choice="fat loss">
+              <span class="icon">🔥</span>
+              <span class="label">Fat Loss</span>
+            </button>
+            <button class="choice-button" data-choice="energy">
+              <span class="icon">⚡</span>
+              <span class="label">Energy/Performance</span>
+            </button>
+            <button class="choice-button" data-choice="general health">
+              <span class="icon">🧘</span>
+              <span class="label">General Health</span>
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="question-section"
+          style="display: none"
+          id="restrictions-section"
+        >
+          <h3>Any dietary restrictions or allergies?</h3>
+          <input
+            type="text"
+            id="restrictions-input"
+            placeholder="E.g., Gluten-free, Lactose intolerant, Nut allergy..."
+            class="text-input"
+          />
+          <div class="common-restrictions">
+            <button class="restriction-tag" data-restriction="none">
+              None
+            </button>
+            <button class="restriction-tag" data-restriction="Gluten-free">
+              Gluten-free
+            </button>
+            <button
+              class="restriction-tag"
+              data-restriction="Lactose intolerant"
+            >
+              Lactose intolerant
+            </button>
+            <button class="restriction-tag" data-restriction="Nut allergy">
+              Nut allergy
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="question-section"
+          style="display: none"
+          id="location-section"
+        >
+          <h3>Where are you located?</h3>
+          <input
+            type="text"
+            id="city-input"
+            placeholder="Enter your city..."
+            class="text-input"
+            value="Rayagada"
+          />
+          <button class="submit-button" id="get-recommendations">
+            🌤️ Get My Food Recommendations
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="results-screen" style="display: none">
+      <div class="results-container">
+        <!-- Weather Display -->
+        <div class="weather-card">
+          <div class="weather-header">
+            <h2>Current Weather</h2>
+            <div id="weather-icon-display"></div>
+          </div>
+          <div class="weather-details">
+            <div class="weather-info">
+              <span class="info-icon">📍</span>
+              <span class="info-label">Location:</span>
+              <span class="info-value" id="location-display">-</span>
+            </div>
+            <div class="weather-info">
+              <span class="info-icon">🌡️</span>
+              <span class="info-label">Current:</span>
+              <span class="info-value" id="temp-display">-</span>
+            </div>
+            <div class="weather-info">
+              <span class="info-icon">💧</span>
+              <span class="info-label">Humidity:</span>
+              <span class="info-value" id="humidity-display">-</span>
+            </div>
+            <div class="weather-info">
+              <span class="info-icon">🌤️</span>
+              <span class="info-label">Feels like:</span>
+              <span class="info-value" id="feels-display">-</span>
+            </div>
+          </div>
+          <div class="weather-summary" id="weather-summary"></div>
+        </div>
+
+        <!-- Food Recommendations -->
+        <div class="recommendations-section">
+          <h2>🍽️ Your Personalized Food Recommendations</h2>
+          <div class="loading-indicator" id="loading-indicator">
+            <div class="spinner"></div>
+            <p>Analyzing weather and generating recommendations...</p>
+          </div>
+          <div id="recommendations-content" style="display: none">
+            <div class="recommendations-text" id="recommendations-text"></div>
+
+            <div class="quick-foods" id="quick-foods">
+              <h3>Quick Picks for Today</h3>
+              <div id="quick-foods-list" class="quick-foods-grid"></div>
+            </div>
+
+            <div
+              class="research-sources"
+              id="research-sources"
+              style="display: none"
+            >
+              <h3>📚 Research Sources</h3>
+              <div id="sources-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-button" id="get-meal-plan">
+            📅 Generate Full Day Meal Plan
+          </button>
+          <button class="action-button secondary" id="new-search">
+            🔄 New Search
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meal Plan Modal -->
+    <div id="meal-plan-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <button class="modal-close" id="close-modal">&times;</button>
+        <h2>📅 Your Complete Day Meal Plan</h2>
+        <div class="meal-plan-loading" id="meal-plan-loading">
+          <div class="spinner"></div>
+          <p>Creating your personalized meal plan...</p>
+        </div>
+        <div id="meal-plan-content" style="display: none"></div>
+      </div>
+    </div>
+
+    <script src="../js/weatherfood.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCalm - AI-Powered Wellness Platform</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <!-- Logo with SVG Icon (Left - N Position) -->
+        <div class="logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 48 48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d4ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #7b2ff7; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <!-- Brain/Mind Icon with Waves -->
+            <circle
+              cx="24"
+              cy="24"
+              r="22"
+              fill="url(#logoGradient)"
+              opacity="0.1"
+            />
+            <path
+              d="M 24 8 C 20 8 16 10 14 14 C 12 14 10 16 10 18 C 10 20 11 22 13 23 C 12 25 12 27 13 29 C 14 31 16 32 18 32 C 19 34 21 36 24 36 C 27 36 29 34 30 32 C 32 32 34 31 35 29 C 36 27 36 25 35 23 C 37 22 38 20 38 18 C 38 16 36 14 34 14 C 32 10 28 8 24 8 Z"
+              fill="none"
+              stroke="url(#logoGradient)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <!-- Waves inside -->
+            <path
+              d="M 16 24 Q 18 22 20 24 T 24 24 T 28 24 T 32 24"
+              fill="none"
+              stroke="url(#logoGradient)"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+            <circle cx="24" cy="18" r="2" fill="url(#logoGradient)" />
+          </svg>
+          <span>CodeCalm</span>
+        </div>
+
+        <!-- Menu Button -->
+        <button class="menu-toggle" aria-label="Toggle Menu">
+          <span class="menu-text">MENU</span>
+          <span class="menu-icon">+</span>
+        </button>
+
+        <!-- Login Button (Right - L Position) -->
+        <button class="header-btn login-btn" id="loginBtn" onclick="window.location.href='frontend/html/login.html'">+ LOGIN</button>
+      </div>
+    </header>
+
+    <!-- Dropdown Menu Panel (Slides from Top) -->
+    <nav class="dropdown-menu">
+      <div class="menu-inner">
+        <div class="menu-header">
+          <div class="menu-logo">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="white"
+            >
+              <circle
+                cx="24"
+                cy="24"
+                r="22"
+                fill="white"
+                opacity="0.1"
+              />
+              <path
+                d="M 24 8 C 20 8 16 10 14 14 C 12 14 10 16 10 18 C 10 20 11 22 13 23 C 12 25 12 27 13 29 C 14 31 16 32 18 32 C 19 34 21 36 24 36 C 27 36 29 34 30 32 C 32 32 34 31 35 29 C 36 27 36 25 35 23 C 37 22 38 20 38 18 C 38 16 36 14 34 14 C 32 10 28 8 24 8 Z"
+                fill="none"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 16 24 Q 18 22 20 24 T 24 24 T 28 24 T 32 24"
+                fill="none"
+                stroke="white"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <circle cx="24" cy="18" r="2" fill="white" />
+            </svg>
+            <span class="menu-brand">CodeCalm</span>
+          </div>
+          
+          <button class="menu-close" aria-label="Close Menu">
+            <span class="close-icon">×</span>
+            <span class="close-text">MENU</span>
+          </button>
+        </div>
+        
+        <ul class="menu-links">
+          <li class="menu-item">
+            <a href="frontend/html/codegent.html" class="menu-link">CODEGENT</a>
+          </li>
+          <li class="menu-item">
+            <a href="frontend/html/parent.html" class="menu-link">PARENTBOT</a>
+          </li>
+          <li class="menu-item">
+            <a href="frontend/html/student.html" class="menu-link">STUDENTBOT</a>
+          </li>
+          <li class="menu-item">
+            <a href="frontend/html/professional.html" class="menu-link">WORKINGPROFESSIONALBOT</a>
+          </li>
+          <li class="menu-item">
+            <a href="frontend/html/fitness.html" class="menu-link">FITNESS</a>
+          </li>
+          <li class="menu-item">
+            <a href="frontend/html/zenmode.html" class="menu-link">ZENMODE</a>
+          </li>
+          <li class="menu-item">
+            <a href="#contact" class="menu-link">CONTACT</a>
+          </li>
+        </ul>
+        
+        <div class="menu-footer">
+          <a href="mailto:udayeaswar24@gmail.com" class="menu-email">UDAYEASWAR24@GMAIL.COM</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <!-- Left Side - Image (50vw) -->
+      <div class="hero-image">
+        <div class="image-main"></div>
+        <div class="chromatic-aberration"></div>
+      </div>
+
+      <!-- Right Side - Content (50vw) -->
+      <div class="hero-content">
+        <!-- Main Headline -->
+        <h1 class="hero-headline">
+          <span class="chromatic-text">A CLEAR AI</span> PLAN FOR YOUR MENTAL
+          WELLNESS
+        </h1>
+
+        <!-- Subheadline/Tagline -->
+        <p class="hero-tagline">
+          We help people find calm using AI where it actually matters — without
+          the noise.
+        </p>
+
+        <!-- Carousel Section -->
+        <div class="carousel-section">
+          <!-- Blur Fade Overlays -->
+          <div class="carousel-fade-right"></div>
+          <div class="carousel-fade-left"></div>
+
+          <div class="carousel-container">
+            <div class="carousel-track">
+              <!-- First Set -->
+              <div class="carousel-card">
+                <div class="card-icon">C</div>
+                <h3>Codegent</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">M</div>
+                <h3>mentalhealth</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">F</div>
+                <h3>Fitdiet</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">P</div>
+                <h3>Parent Wellness</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">F</div>
+                <h3>Fitness Tracker</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">W</div>
+                <h3>Weather Wellness</h3>
+              </div>
+
+              <!-- Duplicate Set for Seamless Loop -->
+              <div class="carousel-card">
+                <div class="card-icon">C</div>
+                <h3>Codegent</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">M</div>
+                <h3>mentalhealth</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">F</div>
+                <h3>Fitdiet</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">P</div>
+                <h3>Parent Wellness</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">F</div>
+                <h3>Fitness Tracker</h3>
+              </div>
+              <div class="carousel-card">
+                <div class="card-icon">W</div>
+                <h3>Weather Wellness</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="buttons-container">
+          <button class="btn-cta btn-primary">FEATURES</button>
+          <button class="btn-cta btn-secondary">GET STARTED</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+      <!-- Left Side - Video Placeholder -->
+      <div class="about-left">
+        <!-- Initial State: Select User Type -->
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="video-info">
+            <span class="video-label">STRESS RELIEF VIDEOS</span>
+            <span class="video-duration">⏱ SELECT YOUR ROLE</span>
+          </div>
+          <div class="play-button">▶</div>
+        </div>
+
+        <!-- User Type Selection (Hidden initially) -->
+        <div class="user-type-selection" id="userTypeSelection" style="display: none;">
+          <h3 class="selection-title">Choose Your Role</h3>
+          <div class="user-type-buttons">
+            <button class="user-type-btn" data-type="student">
+              <span class="btn-icon">🎓</span>
+              <span class="btn-text">Student</span>
+            </button>
+            <button class="user-type-btn" data-type="parent">
+              <span class="btn-icon">👨‍👩‍👧</span>
+              <span class="btn-text">Parent</span>
+            </button>
+            <button class="user-type-btn" data-type="working professional">
+              <span class="btn-icon">💼</span>
+              <span class="btn-text">Working Professional</span>
+            </button>
+          </div>
+          <button class="back-btn" id="backToHome">← Back to Home</button>
+        </div>
+
+        <!-- Video Player Section (Hidden initially) -->
+        <div class="video-player-section" id="videoPlayerSection" style="display: none;">
+          <div class="video-header">
+            <h3 class="video-section-title" id="videoSectionTitle">Stress Relief Videos</h3>
+            <button class="back-btn-small" id="backToSelection">← Change Role</button>
+          </div>
+          <div class="video-grid" id="videoGrid">
+            <!-- Videos will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Content with Scroll Reveal -->
+      <div class="about-right">
+        <h2 class="reveal-heading" data-scroll-reveal>
+          WE'RE A HANDS-ON TEAM OF AI CONSULTANTS FOCUSED ON HELPING PEOPLE FIND
+          CALM WITH NO DISRUPTION
+        </h2>
+
+        <div class="developer-profile">
+          <img src="uday.jpeg" alt="Uday Easwar" class="profile-pic" />
+          <div class="profile-info">
+            <p class="developer-name">UDAY EASWAR</p>
+            <p class="developer-role">DEVELOPER OF CODECALM</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Intro Section -->
+    <section class="features-intro">
+      <div class="features-intro-left">
+        <span class="section-label">02 FEATURES</span>
+        <h2 class="features-main-heading" data-scroll-reveal>
+          YOUR COMPLETE AI-POWERED STRESS RELIEF TOOLKIT
+        </h2>
+      </div>
+      <div class="features-intro-right">
+        <p class="features-description">
+          CodeCalm combines advanced AI technology with evidence-based wellness
+          practices to provide comprehensive stress relief solutions. From
+          mental health support to fitness optimization, our platform adapts to
+          your unique needs.
+        </p>
+        <p class="features-description">
+          Each feature is designed to reduce anxiety, improve focus, and help
+          you find calm in your daily life—without disruption, without
+          complexity, just practical support when you need it most.
+        </p>
+        <button class="btn-explore">EXPLORE FEATURES</button>
+      </div>
+    </section>
+
+    <!-- Feature 01: Mental Wellness -->
+    <section class="feature-item" data-feature="01">
+      <div class="feature-image">
+        <img src="mentalwellness.png" alt="Mental Wellness" />
+      </div>
+      <div class="feature-content">
+        <span class="feature-number">/01</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          MENTAL WELLNESS QUESTIONS
+        </h3>
+        <p class="feature-description">
+          AI-powered conversational support to help you process daily stress,
+          anxiety, and mental health concerns through guided questions and
+          empathetic responses.
+        </p>
+        <div class="feature-tags">
+          <span>#MENTALHEALTH</span>
+          <span>#AIWELLNESS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 02: Coding Platform -->
+    <section class="feature-item" data-feature="02">
+      <div class="feature-content">
+        <span class="feature-number">/02</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          STRESS-FREE CODING ENVIRONMENT
+        </h3>
+        <p class="feature-description">
+          A calming coding interface with AI assistance, syntax highlighting,
+          and real-time help to reduce programming frustration and build
+          confidence without pressure.
+        </p>
+        <div class="feature-tags">
+          <span>#CODINGRELIEF</span>
+          <span>#DEVWELLNESS</span>
+        </div>
+      </div>
+      <div class="feature-image">
+        <img src="coding.png" alt="Coding Environment" />
+      </div>
+    </section>
+
+    <!-- Feature 03: Parent Support -->
+    <section class="feature-item" data-feature="03">
+      <div class="feature-image">
+        <img src="parent.png" alt="Parent Support" />
+      </div>
+      <div class="feature-content">
+        <span class="feature-number">/03</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          PARENT WELLNESS ASSISTANT
+        </h3>
+        <p class="feature-description">
+          AI-powered guidance for overwhelmed parents dealing with work-life
+          balance, parenting challenges, and family stress management with
+          practical, personalized advice.
+        </p>
+        <div class="feature-tags">
+          <span>#PARENTWELLNESS</span>
+          <span>#FAMILYSUPPORT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 04: Professional Stress -->
+    <section class="feature-item" data-feature="04">
+      <div class="feature-content">
+        <span class="feature-number">/04</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          WORKPLACE STRESS RELIEF
+        </h3>
+        <p class="feature-description">
+          Tools and techniques for working professionals to manage deadlines,
+          workplace anxiety, burnout prevention, and maintaining productivity
+          without sacrificing mental health.
+        </p>
+        <div class="feature-tags">
+          <span>#WORKSTRESS</span>
+          <span>#PROFESSIONALSUPPORT</span>
+        </div>
+      </div>
+      <div class="feature-image">
+        <img src="workplace.png" alt="Professional Stress" />
+      </div>
+    </section>
+
+    <!-- Feature 05: Student Support -->
+    <section class="feature-item" data-feature="05">
+      <div class="feature-image">
+        <img src="student.png" alt="Student Support" />
+      </div>
+      <div class="feature-content">
+        <span class="feature-number">/05</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          STUDENT STRESS & EXAM SUPPORT
+        </h3>
+        <p class="feature-description">
+          Tailored support for students dealing with academic pressure, exam
+          anxiety, study stress, and maintaining mental wellness during
+          challenging educational periods.
+        </p>
+        <div class="feature-tags">
+          <span>#STUDENTWELLNESS</span>
+          <span>#EXAMRELIEF</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 06: Fitness & Weather -->
+    <section class="feature-item" data-feature="06">
+      <div class="feature-content">
+        <span class="feature-number">/06</span>
+        <h3 class="feature-heading" data-scroll-reveal>
+          FITNESSBOT - AI FITNESS COMPANION
+        </h3>
+        <p class="feature-description">
+          Meet FitnessBot 🤖 - Your AI-powered fitness companion with animated 3D character! Get personalized workout plans, real-time research-backed recommendations, exercise demonstrations, and nutrition guidance tailored to your goals, equipment, and fitness level. Powered by Groq AI and scientific research.
+        </p>
+        <div class="feature-tags">
+          <span>#AIWORKOUTS</span>
+          <span>#RESEARCH-BACKED</span>
+        </div>
+      </div>
+      <div class="feature-image">
+        <img src="fitness.png" alt="Fitness & Wellness" />
+      </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section class="why-us-section">
+      <div class="corner-plus top-left">+</div>
+      <div class="corner-plus top-right">+</div>
+      <div class="corner-plus bottom-left">+</div>
+      <div class="corner-plus bottom-right">+</div>
+
+      <div class="why-us-left">
+        <p class="section-label">● 03 WHY US?</p>
+        <h2 class="why-heading" data-scroll-reveal>
+          <span class="light">WHY PEOPLE</span><br />
+          <span class="bold">CHOOSE</span><br />
+          <span class="bold">CODECALM</span>
+        </h2>
+        <p class="why-tagline">
+          We make stress management simple, accessible, and effective.
+        </p>
+      </div>
+
+      <div class="why-us-right">
+        <div class="icon-placeholder"></div>
+        <h3 class="advantages-heading">
+          OUR ADVANTAGES <span class="light">INCLUDE:</span>
+        </h3>
+
+        <div class="advantages-list">
+          <div class="advantage-item">
+            <span class="advantage-number">01</span>
+            <span class="advantage-text"
+              >PERSONALIZED, AI-POWERED <strong>SUPPORT</strong></span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+          <div class="advantage-item">
+            <span class="advantage-number">02</span>
+            <span class="advantage-text"
+              >PROVEN <strong>STRESS REDUCTION</strong> TECHNIQUES</span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+          <div class="advantage-item">
+            <span class="advantage-number">03</span>
+            <span class="advantage-text"
+              >MULTI-CATEGORY <strong>WELLNESS TOOLS</strong></span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+          <div class="advantage-item">
+            <span class="advantage-number">04</span>
+            <span class="advantage-text"
+              >ACCESSIBLE <strong>24/7 ASSISTANCE</strong></span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+          <div class="advantage-item">
+            <span class="advantage-number">05</span>
+            <span class="advantage-text"
+              >PRIVACY-FOCUSED <strong>APPROACH</strong></span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+          <div class="advantage-item">
+            <span class="advantage-number">06</span>
+            <span class="advantage-text"
+              >SCIENTIFICALLY-BACKED <strong>METHODS</strong></span
+            >
+            <span class="advantage-plus">+</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transformation Section -->
+    <section class="transformation-section">
+      <div class="sticky-container">
+        <div class="section-header">
+          <p class="section-label transform-label">● 04 TRANSFORMATION</p>
+          <h2 class="section-heading transform-heading">
+            FROM STRESS TO CALM
+          </h2>
+        </div>
+
+        <div class="image-row">
+        <!-- Child -->
+        <div class="image-container">
+          <img
+            src="images/childsad.png"
+            class="sad-image"
+            alt="Stressed child"
+          />
+          <img
+            src="images/childhappy.png"
+            class="happy-image"
+            alt="Happy child"
+          />
+          <p class="image-label">CHILD</p>
+        </div>
+
+        <!-- Parent -->
+        <div class="image-container">
+          <img
+            src="images/parentsad.png"
+            class="sad-image"
+            alt="Stressed parent"
+          />
+          <img
+            src="images/parenthappy.png"
+            class="happy-image"
+            alt="Happy parent"
+          />
+          <p class="image-label">PARENT</p>
+        </div>
+
+        <!-- Student -->
+        <div class="image-container">
+          <img
+            src="images/studentsad.png"
+            class="sad-image"
+            alt="Stressed student"
+          />
+          <img
+            src="images/studenthappy.png"
+            class="happy-image"
+            alt="Happy student"
+          />
+          <p class="image-label">STUDENT</p>
+        </div>
+
+        <!-- Professional -->
+        <div class="image-container">
+          <img
+            src="images/workingprofessionlsad.png"
+            class="sad-image"
+            alt="Stressed professional"
+          />
+          <img
+            src="images/workingprofessionalhappy.png"
+            class="happy-image"
+            alt="Happy professional"
+          />
+          <p class="image-label">PROFESSIONAL</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics-section">
+      <div class="section-container">
+        <p class="section-label">● 05 WHY MENTAL HEALTH MATTERS</p>
+
+        <h2 class="section-heading">
+          THE LONGER YOU <span class="bold">IGNORE STRESS,</span><br />
+          THE HARDER IT <span class="bold">BECOMES</span><br />
+          <span class="light">TO RECOVER.</span>
+        </h2>
+
+        <div class="stats-list">
+          <!-- Stat 1 -->
+          <div class="stat-item" data-percentage="73">
+            <div class="stat-content">
+              <span class="stat-number">01/</span>
+              <p class="stat-description">
+                STUDENTS REPORT <strong>ACADEMIC STRESS</strong>
+              </p>
+            </div>
+            <div class="stat-badge-container">
+              <div class="stat-bar"></div>
+              <div class="stat-badge">+73%</div>
+            </div>
+            <span class="stat-label">/STRESS_LEVELS</span>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="stat-item" data-percentage="68">
+            <div class="stat-content">
+              <span class="stat-number">02/</span>
+              <p class="stat-description">
+                WORKING PROFESSIONALS FACE <strong>BURNOUT RISK</strong>
+              </p>
+            </div>
+            <div class="stat-badge-container">
+              <div class="stat-bar"></div>
+              <div class="stat-badge">+68%</div>
+            </div>
+            <span class="stat-label">/WORKPLACE_HEALTH</span>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="stat-item" data-percentage="61">
+            <div class="stat-content">
+              <span class="stat-number">03/</span>
+              <p class="stat-description">
+                PARENTS EXPERIENCE <strong>DAILY OVERWHELM</strong>
+              </p>
+            </div>
+            <div class="stat-badge-container">
+              <div class="stat-bar"></div>
+              <div class="stat-badge">+61%</div>
+            </div>
+            <span class="stat-label">/FAMILY_PRESSURE</span>
+          </div>
+
+          <!-- Stat 4 -->
+          <div class="stat-item" data-percentage="85">
+            <div class="stat-content">
+              <span class="stat-number">04/</span>
+              <p class="stat-description">
+                UNTREATED ANXIETY LEADS TO <strong>CHRONIC ISSUES</strong>
+              </p>
+            </div>
+            <div class="stat-badge-container">
+              <div class="stat-bar"></div>
+              <div class="stat-badge">+85%</div>
+            </div>
+            <span class="stat-label">/HEALTH_IMPACT</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Real Results Section -->
+    <section class="real-results-section">
+      <div class="corner-plus top-left">+</div>
+      <div class="corner-plus top-right">+</div>
+      <div class="corner-plus bottom-left">+</div>
+      <div class="corner-plus bottom-right">+</div>
+      
+      <div class="section-container">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+          <h3 class="sidebar-title">The impact.</h3>
+          <div class="logo-placeholder">
+            <svg
+              class="logo-icon"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient
+                  id="logoGradientSidebar"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style="stop-color: #00d4ff; stop-opacity: 1"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color: #7b2ff7; stop-opacity: 1"
+                  />
+                </linearGradient>
+              </defs>
+              <!-- Brain/Mind Icon with Waves -->
+              <circle
+                cx="24"
+                cy="24"
+                r="22"
+                fill="url(#logoGradientSidebar)"
+                opacity="0.1"
+              />
+              <path
+                d="M 24 8 C 20 8 16 10 14 14 C 12 14 10 16 10 18 C 10 20 11 22 13 23 C 12 25 12 27 13 29 C 14 31 16 32 18 32 C 19 34 21 36 24 36 C 27 36 29 34 30 32 C 32 32 34 31 35 29 C 36 27 36 25 35 23 C 37 22 38 20 38 18 C 38 16 36 14 34 14 C 32 10 28 8 24 8 Z"
+                fill="none"
+                stroke="url(#logoGradientSidebar)"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <!-- Waves inside -->
+              <path
+                d="M 16 24 Q 18 22 20 24 T 24 24 T 28 24 T 32 24"
+                fill="none"
+                stroke="url(#logoGradientSidebar)"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <circle cx="24" cy="18" r="2" fill="url(#logoGradientSidebar)" />
+            </svg>
+          </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+          <!-- Section Label & Heading -->
+          <div class="heading-container">
+            <p class="section-label">● 06 REAL RESULTS</p>
+            <h2 class="section-heading">
+              <span class="news-label">NEWS</span> RESULTS
+            </h2>
+          </div>
+          
+          <!-- Benefits Grid -->
+          <div class="benefits-grid">
+            <!-- Benefit 1 -->
+            <div class="benefit-card" data-scroll-reveal>
+              <div class="card-icon">●</div>
+              <h4 class="card-label">STRESS RELIEF TIMELINE</h4>
+              <p class="card-description">
+                Most users experience noticeable stress reduction within 2-3 weeks.
+              </p>
+            </div>
+            
+            <!-- Benefit 2 -->
+            <div class="benefit-card" data-scroll-reveal>
+              <div class="card-icon">●●</div>
+              <h4 class="card-label">TIME SAVED</h4>
+              <p class="card-description">
+                On average, users save 10+ hours/month by addressing stress proactively.
+              </p>
+            </div>
+            
+            <!-- Benefit 3 -->
+            <div class="benefit-card" data-scroll-reveal>
+              <div class="card-icon">●●●</div>
+              <h4 class="card-label">WELLNESS IMPACT</h4>
+              <p class="card-description">
+                We help people improve mental wellness by up to 75% with consistent use.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="corner-plus top-left">+</div>
+      <div class="corner-plus top-right">+</div>
+      <div class="corner-plus bottom-left">+</div>
+      <div class="corner-plus bottom-right">+</div>
+      
+      <div class="faq-container">
+        <!-- Section Label & Heading -->
+        <div class="faq-header">
+          <p class="section-label">● 07 HELP & INFO</p>
+          <h2 class="section-heading">FAQ</h2>
+        </div>
+        
+        <!-- FAQ List -->
+        <div class="faq-list">
+          <!-- FAQ Item 1 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">01</span>
+              <span class="question-text">Is CodeCalm free to use?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes, CodeCalm offers a free tier with basic stress-relief features. Premium plans unlock advanced AI agents and personalized coaching.</p>
+            </div>
+          </div>
+          
+          <!-- FAQ Item 2 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">02</span>
+              <span class="question-text">How does AI-powered stress support work?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Our AI analyzes your stress patterns, triggers, and responses to provide personalized coping strategies, mindfulness exercises, and real-time support 24/7.</p>
+            </div>
+          </div>
+          
+          <!-- FAQ Item 3 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">03</span>
+              <span class="question-text">Is my mental health data private and secure?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely. We use end-to-end encryption and never share your personal data. Your conversations and progress are completely confidential.</p>
+            </div>
+          </div>
+          
+          <!-- FAQ Item 4 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">04</span>
+              <span class="question-text">Can I use CodeCalm if I'm already seeing a therapist?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! CodeCalm is designed to complement professional therapy, not replace it. Think of it as daily support between your therapy sessions.</p>
+            </div>
+          </div>
+          
+          <!-- FAQ Item 5 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">05</span>
+              <span class="question-text">How long does it take to see results?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Most users report feeling calmer and more in control within 2-3 weeks of consistent use. Results vary based on individual needs and commitment.</p>
+            </div>
+          </div>
+          
+          <!-- FAQ Item 6 -->
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span class="question-number">06</span>
+              <span class="question-text">What devices can I use CodeCalm on?</span>
+              <span class="toggle-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>CodeCalm works on web browsers, iOS, and Android devices. Your progress syncs across all platforms automatically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+      <div class="corner-plus top-left">+</div>
+      <div class="corner-plus bottom-left">+</div>
+      
+      <div class="contact-container">
+        <!-- Left Side -->
+        <div class="contact-left">
+          <p class="section-label">● CONTACT US DIRECTLY</p>
+          <h2 class="contact-heading">STILL UNSURE?</h2>
+          
+          <div class="contact-cta">
+            <a href="mailto:uday@codecalm.com?subject=Question%20about%20CodeCalm" class="contact-link">
+              <span>ASK A QUESTION</span>
+              <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Right Side - Testimonial -->
+        <div class="contact-right">
+          <p class="testimonial-text">
+            My role is to make sure every user finds the calm and peace they deserve.
+          </p>
+          
+          <div class="testimonial-author">
+            <img src="uday.jpeg" alt="Uday" class="author-photo">
+            <div class="author-info">
+              <p class="author-name">UDAY</p>
+              <p class="author-role">FOUNDER & DEVELOPER</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 09: Final Contact Form -->
+    <section class="final-contact-section">
+      <!-- Gradient Blobs -->
+      <div class="gradient-blob blob-1"></div>
+      <div class="gradient-blob blob-2"></div>
+      <div class="gradient-blob blob-3"></div>
+      
+      <div class="corner-plus top-left">+</div>
+      <div class="corner-plus bottom-left">+</div>
+      
+      <div class="final-contact-container">
+        <!-- Left: Ready to Start -->
+        <div class="contact-col contact-label">
+          <p class="section-label">● 08 READY TO START?</p>
+        </div>
+        
+        <!-- Middle: Get in Touch & Form -->
+        <div class="contact-col contact-main">
+          <h2 class="contact-heading">GET IN TOUCH</h2>
+          <p class="contact-subtitle">Whether you have questions or just want to explore options, we're here.</p>
+          
+          <!-- Contact Form -->
+          <form class="contact-form" id="contactForm">
+            <div class="form-staggered">
+              <!-- Name - Top Left -->
+              <div class="form-group form-level-1">
+                <label for="name">NAME</label>
+                <input type="text" id="name" name="name" placeholder="YOUR NAME" required>
+              </div>
+              
+              <!-- Email - Middle Center -->
+              <div class="form-group form-level-2">
+                <label for="email">EMAIL ADDRESS</label>
+                <input type="email" id="email" name="email" placeholder="EMAIL@ADDRESS.COM" required>
+              </div>
+              
+              <!-- Submit Button - Bottom Right -->
+              <div class="form-group form-level-3">
+                <button type="submit" class="submit-btn">
+                  <span>LET'S TALK</span>
+                  <span class="arrow">→</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="form-footer">
+              <p class="form-disclaimer">
+                BY SUBMITTING, YOU AGREE TO OUR <a href="#terms">TERMS</a> AND <a href="#privacy">PRIVACY POLICY</a>.
+              </p>
+              
+              <p class="location-text">WE ARE BASED IN <strong>INDIA</strong></p>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Right: Navigation Links -->
+        <div class="contact-col contact-nav">
+          <nav class="footer-nav">
+            <a href="#home">HOME</a>
+            <a href="#codegent">CODEGENT</a>
+            <a href="#parentbot">PARENTBOT</a>
+            <a href="#studentbot">STUDENTBOT</a>
+            <a href="#workingprofessionalbot">WORKINGPROFESSIONALBOT</a>
+            <a href="#zenmode">ZENMODE</a>
+            <a href="#contact">CONTACT</a>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Info Bar -->
+    <section class="contact-info-bar">
+      <div class="contact-info-container">
+        <!-- Left: CodeCalm Logo -->
+        <div class="brand-logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 48 48"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradientFooter"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d4ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #7b2ff7; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <circle
+              cx="24"
+              cy="24"
+              r="22"
+              fill="url(#logoGradientFooter)"
+              opacity="0.1"
+            />
+            <path
+              d="M 24 8 C 20 8 16 10 14 14 C 12 14 10 16 10 18 C 10 20 11 22 13 23 C 12 25 12 27 13 29 C 14 31 16 32 18 32 C 19 34 21 36 24 36 C 27 36 29 34 30 32 C 32 32 34 31 35 29 C 36 27 36 25 35 23 C 37 22 38 20 38 18 C 38 16 36 14 34 14 C 32 10 28 8 24 8 Z"
+              fill="none"
+              stroke="url(#logoGradientFooter)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M 16 24 Q 18 22 20 24 T 24 24 T 28 24 T 32 24"
+              fill="none"
+              stroke="url(#logoGradientFooter)"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+            <circle cx="24" cy="18" r="2" fill="url(#logoGradientFooter)" />
+          </svg>
+          <span class="brand-name">CODECALM</span>
+        </div>
+        
+        <!-- Center: Email -->
+        <div class="contact-email">
+          <a href="mailto:udayeaswar24@gmail.com">UDAYEASWAR24@GMAIL.COM</a>
+        </div>
+        
+        <!-- Right: LinkedIn -->
+        <div class="social-links">
+          <a href="https://linkedin.com/in/udayeaswar" target="_blank" class="linkedin-link">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            <span>LN</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Animation Section -->
+    <section class="brand-animation-section">
+      <div class="brand-animation-container">
+        <h1 class="brand-animated">
+          <span class="brand-letter" data-letter="C">C</span>
+          <span class="brand-letter" data-letter="O">O</span>
+          <span class="brand-letter" data-letter="D">D</span>
+          <span class="brand-letter" data-letter="E">E</span>
+          <span class="brand-letter" data-letter="C">C</span>
+          <span class="brand-letter" data-letter="A">A</span>
+          <span class="brand-letter floating-letter" data-letter="L">L</span>
+          <span class="brand-letter" data-letter="M">M</span>
+        </h1>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <!-- Left: Copyright -->
+        <div class="footer-left">
+          <p class="footer-brand">© 2025 CODECALM. ALL RIGHTS RESERVED.</p>
+        </div>
+        
+        <!-- Center: Legal Links -->
+        <div class="footer-center">
+          <a href="#privacy">PRIVACY POLICY</a>
+          <a href="#terms">TERMS OF SERVICE</a>
+        </div>
+        
+        <!-- Right: Developer Credit -->
+        <div class="footer-right">
+          <p class="developed-by">DEVELOPED BY</p>
+          <div class="developer-info">
+            <img src="uday.jpeg" alt="Udayeaswar" class="developer-photo">
+            <span class="developer-name">UDAYEASWAR</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="frontend/js/auth-utils.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

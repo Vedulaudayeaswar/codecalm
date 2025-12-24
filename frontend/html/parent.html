@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ParentBot - AI Parenting Support | CodeCalm</title>
+    <link rel="stylesheet" href="../css/parent.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Left Side: 3D Parent Robot -->
+      <div class="robot-container">
+        <div class="robot-wrapper">
+          <canvas id="robotCanvas"></canvas>
+          <div class="robot-info">
+            <div class="robot-name">ParentBot</div>
+            <div class="robot-tagline">Your AI Parenting Companion</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Chat Interface -->
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="status">
+            <div class="status-dot"></div>
+            <span>Online & Ready to Help</span>
+          </div>
+          <button
+            class="home-btn"
+            onclick="window.location.href='/index.html'"
+            title="Go Home"
+          >
+            <i class="fas fa-home"></i> HOME
+          </button>
+          <button
+            class="close-btn"
+            onclick="window.location.href='/index.html'"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot-message">
+            <div class="message-content">
+              <p>
+                🤗 Hello! I'm ParentBot, your caring AI parenting companion.
+              </p>
+              <p>
+                I understand that parenting can be challenging. I'm here to help
+                with stress management, work-life balance, and supporting your
+                family's wellbeing. How can I help you today?
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+
+        <div class="chat-input-container">
+          <button
+            class="voice-btn"
+            id="voiceBtn"
+            onclick="toggleVoiceRecognition()"
+            title="Click to speak"
+          >
+            <i class="fas fa-microphone"></i>
+          </button>
+          <input
+            type="text"
+            id="userInput"
+            class="chat-input"
+            placeholder="Type or click microphone to speak..."
+            autocomplete="off"
+          />
+          <button class="send-btn" id="sendBtn">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="quick-actions">
+          <button
+            class="quick-btn"
+            data-question="I'm overwhelmed with parenting"
+          >
+            😰 Overwhelmed
+          </button>
+          <button class="quick-btn" data-question="Work-family balance tips">
+            ⚖️ Balance Help
+          </button>
+          <button class="quick-btn" data-question="Managing parenting stress">
+            💆 Stress Relief
+          </button>
+          <button class="quick-btn" data-question="Quality time with kids">
+            👨‍👩‍👧 Family Time
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/parent.js"></script>
+  </body>
+</html>

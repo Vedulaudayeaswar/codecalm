@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitCalm - Physical & Mental Fitness</title>
+    <link rel="stylesheet" href="../css/fitness.css" />
+  </head>
+  <body>
+    <!-- Intro Animation Section -->
+    <div id="intro-section">
+      <div class="blocks-container">
+        <div class="block block1"></div>
+        <div class="block block2"></div>
+        <div class="block block3"></div>
+      </div>
+      <h2 class="intro-text">Stay Fit Physically and Mentally</h2>
+    </div>
+
+    <!-- Main Website Content -->
+    <div id="main-content" style="display: none">
+      <!-- Header -->
+      <header class="header" id="header">
+        <div class="logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2L2 7L12 12L22 7L12 2Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 17L12 22L22 17"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 12L12 17L22 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span class="logo-text">FitCalm</span>
+        </div>
+        <nav class="nav">
+          <button class="nav-btn" onclick="window.location.href='/index.html'">
+            Home
+          </button>
+          <button class="nav-btn" onclick="scrollToSection('features')">
+            Features
+          </button>
+          <button class="nav-btn" onclick="scrollToSection('we-care')">
+            We Care
+          </button>
+          <button class="nav-btn" onclick="scrollToSection('contact')">
+            Contact
+          </button>
+        </nav>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="hero" id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">FitCalm</h1>
+          <p class="hero-subtitle">Because fitness and health is related</p>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features-section" id="features">
+        <div class="features-container">
+          <div class="section-header">
+            <span class="section-tag">Features</span>
+            <h2 class="section-title">Where your ambition meets velocity.</h2>
+          </div>
+
+          <div class="features-grid">
+            <!-- Feature 1: ZenMode -->
+            <div
+              class="feature-card"
+              onclick="window.location.href='zenmode.html'"
+              style="cursor: pointer"
+            >
+              <div class="feature-icon-container">
+                <svg
+                  class="feature-icon zen-icon"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="80"
+                    fill="#e8f5e9"
+                    opacity="0.6"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="60"
+                    fill="#c8e6c9"
+                    opacity="0.6"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="40"
+                    fill="#a5d6a7"
+                    opacity="0.6"
+                  />
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="20"
+                    fill="#81c784"
+                    opacity="0.8"
+                  />
+                  <path
+                    d="M100 30 Q110 50 100 70 Q90 50 100 30"
+                    fill="#4caf50"
+                  />
+                </svg>
+              </div>
+              <h3 class="feature-title">ZenMode</h3>
+              <p class="feature-description">
+                Experience tranquility with guided breathing practices
+                accompanied by soothing nature sounds like rain, forest
+                ambiance, and ocean waves for complete mental relaxation.
+              </p>
+            </div>
+
+            <!-- Feature 2: FitnessBot -->
+            <div
+              class="feature-card"
+              onclick="window.location.href='fitnessbot.html'"
+              style="cursor: pointer"
+            >
+              <div class="feature-icon-container">
+                <svg
+                  class="feature-icon bot-icon"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="60"
+                    y="50"
+                    width="80"
+                    height="100"
+                    rx="10"
+                    fill="#e3f2fd"
+                    opacity="0.8"
+                  />
+                  <circle cx="85" cy="80" r="8" fill="#1976d2" />
+                  <circle cx="115" cy="80" r="8" fill="#1976d2" />
+                  <rect
+                    x="85"
+                    y="105"
+                    width="30"
+                    height="4"
+                    rx="2"
+                    fill="#1976d2"
+                  />
+                  <circle cx="100" cy="30" r="15" fill="#42a5f5" />
+                  <rect x="95" y="30" width="10" height="20" fill="#42a5f5" />
+                  <path
+                    d="M70 120 L80 135 L70 150"
+                    stroke="#1976d2"
+                    stroke-width="3"
+                    fill="none"
+                  />
+                  <path
+                    d="M130 120 L120 135 L130 150"
+                    stroke="#1976d2"
+                    stroke-width="3"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <h3 class="feature-title">FitnessBot</h3>
+              <p class="feature-description">
+                Your AI-powered fitness companion that analyzes your height,
+                weight, and goals to recommend personalized workout routines
+                with or without equipment.
+              </p>
+            </div>
+
+            <!-- Feature 3: Weather + Food -->
+            <div
+              class="feature-card"
+              onclick="window.location.href='weatherfood.html'"
+              style="cursor: pointer"
+            >
+              <div class="feature-icon-container">
+                <svg
+                  class="feature-icon weather-icon"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle cx="70" cy="70" r="25" fill="#fff9c4" />
+                  <path
+                    d="M70 35 L70 45 M70 95 L70 105 M35 70 L45 70 M95 70 L105 70 M47 47 L54 54 M86 86 L93 93 M47 93 L54 86 M86 54 L93 47"
+                    stroke="#ffd54f"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <ellipse
+                    cx="130"
+                    cy="120"
+                    rx="35"
+                    ry="25"
+                    fill="#e1f5fe"
+                    opacity="0.9"
+                  />
+                  <circle
+                    cx="110"
+                    cy="125"
+                    r="20"
+                    fill="#b3e5fc"
+                    opacity="0.9"
+                  />
+                  <path
+                    d="M90 140 Q100 145 110 140 Q120 145 130 140 Q140 145 150 140"
+                    stroke="#4dd0e1"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                  <circle cx="140" cy="160" r="15" fill="#ffccbc" />
+                  <circle cx="125" cy="170" r="12" fill="#ffab91" />
+                  <circle cx="155" cy="170" r="10" fill="#ff8a65" />
+                </svg>
+              </div>
+              <h3 class="feature-title">Weather + Food</h3>
+              <p class="feature-description">
+                Get smart nutrition advice based on real-time weather
+                conditions. Discover the best veg and non-veg foods to maintain
+                optimal physical and mental health.
+              </p>
+            </div>
+
+            <!-- Feature 4: Progress Tracker -->
+            <div class="feature-card">
+              <div class="feature-icon-container">
+                <svg
+                  class="feature-icon progress-icon"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="40"
+                    y="140"
+                    width="25"
+                    height="40"
+                    rx="3"
+                    fill="#c5cae9"
+                  />
+                  <rect
+                    x="75"
+                    y="120"
+                    width="25"
+                    height="60"
+                    rx="3"
+                    fill="#9fa8da"
+                  />
+                  <rect
+                    x="110"
+                    y="90"
+                    width="25"
+                    height="90"
+                    rx="3"
+                    fill="#7986cb"
+                  />
+                  <rect
+                    x="145"
+                    y="60"
+                    width="25"
+                    height="120"
+                    rx="3"
+                    fill="#5c6bc0"
+                  />
+                  <path d="M50 50 L190 50" stroke="#e0e0e0" stroke-width="2" />
+                  <path
+                    d="M40 180 L190 180"
+                    stroke="#424242"
+                    stroke-width="3"
+                  />
+                  <polyline
+                    points="170,30 180,40 200,20"
+                    stroke="#4caf50"
+                    stroke-width="4"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <h3 class="feature-title">Progress Tracker</h3>
+              <p class="feature-description">
+                Monitor your fitness journey with detailed analytics, track
+                workout consistency, and visualize your improvements over time
+                with intuitive charts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why ZenMode Section (BTMM) -->
+      <section class="zenmode-section" id="zenmode">
+        <div class="zenmode-container">
+          <!-- BTMM Letters Header -->
+          <div class="btmm-header">
+            <div class="btmm-letter" id="letter-b" data-step="0">B</div>
+            <div class="btmm-letter" id="letter-t" data-step="1">T</div>
+            <div class="btmm-letter" id="letter-m1" data-step="2">M</div>
+            <div class="btmm-letter" id="letter-m2" data-step="3">M</div>
+          </div>
+
+          <!-- Content Slides -->
+          <div class="zenmode-content">
+            <!-- Slide 1: Breathing Exercise -->
+            <div class="zenmode-slide active" data-step="0">
+              <div class="zenmode-text">
+                <h2 class="zenmode-title">Breathing Exercise</h2>
+                <p class="zenmode-description">
+                  Master the art of controlled breathing to reduce stress and
+                  anxiety. Our guided breathing exercises help you achieve
+                  deeper relaxation, improve focus, and enhance your overall
+                  mental clarity through proven techniques like box breathing,
+                  4-7-8 method, and diaphragmatic breathing.
+                </p>
+              </div>
+              <div class="zenmode-image">
+                <img
+                  src="../../images/breathing.png"
+                  alt="Breathing Exercise"
+                  class="zen-img"
+                />
+              </div>
+            </div>
+
+            <!-- Slide 2: Types of Breathing -->
+            <div class="zenmode-slide" data-step="1">
+              <div class="zenmode-text">
+                <h2 class="zenmode-title">Types of Breathing</h2>
+                <p class="zenmode-description">
+                  Explore various breathing techniques tailored for different
+                  needs. From energizing breath work to calming exercises,
+                  discover box breathing for focus, alternate nostril breathing
+                  for balance, belly breathing for relaxation, and 4-7-8
+                  breathing for better sleep and stress relief.
+                </p>
+              </div>
+              <div class="zenmode-image">
+                <img
+                  src="../../images/typesofbreathing.png"
+                  alt="Types of Breathing"
+                  class="zen-img"
+                />
+              </div>
+            </div>
+
+            <!-- Slide 3: Meditation -->
+            <div class="zenmode-slide" data-step="2">
+              <div class="zenmode-text">
+                <h2 class="zenmode-title">Meditation</h2>
+                <p class="zenmode-description">
+                  Experience the transformative power of guided meditation
+                  sessions. Cultivate mindfulness, reduce mental clutter, and
+                  find inner peace through various meditation practices
+                  including mindful awareness, body scan meditation,
+                  loving-kindness meditation, and visualization techniques for
+                  holistic well-being.
+                </p>
+              </div>
+              <div class="zenmode-image">
+                <img
+                  src="../../images/meditation.png"
+                  alt="Meditation"
+                  class="zen-img"
+                />
+              </div>
+            </div>
+
+            <!-- Slide 4: Mind Relaxation with Music -->
+            <div class="zenmode-slide" data-step="3">
+              <div class="zenmode-text">
+                <h2 class="zenmode-title">Mind Relaxation with Music</h2>
+                <p class="zenmode-description">
+                  Immerse yourself in soothing natural soundscapes designed for
+                  deep relaxation. Choose from calming nature sounds, gentle
+                  rain ambience, peaceful ocean waves, serene forest
+                  atmospheres, and harmonious meditation music to create your
+                  perfect relaxation environment and achieve mental tranquility.
+                </p>
+              </div>
+              <div class="zenmode-image">
+                <img
+                  src="../../images/nature.png"
+                  alt="Peaceful Relaxation"
+                  class="zen-img"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- We Care Section -->
+      <section class="wecare-section" id="we-care">
+        <div class="wecare-container">
+          <div class="wecare-tag">WE CARE</div>
+          <h2 class="wecare-title">FROM STRESS TO CALM</h2>
+
+          <div class="wecare-images-wrapper">
+            <!-- Stressed State (Default) -->
+            <div class="wecare-grid stressed-state">
+              <div class="wecare-card">
+                <img
+                  src="../../images/sadmen.png"
+                  alt="Stressed Man"
+                  class="wecare-img"
+                />
+                <div class="wecare-label">STRESSED</div>
+              </div>
+              <div class="wecare-card">
+                <img
+                  src="../../images/sadwomen.png"
+                  alt="Stressed Woman"
+                  class="wecare-img"
+                />
+                <div class="wecare-label">OVERWHELMED</div>
+              </div>
+            </div>
+
+            <!-- Happy State (After Scroll) -->
+            <div class="wecare-grid happy-state">
+              <div class="wecare-card">
+                <img
+                  src="../../images/happymen.png"
+                  alt="Happy Man"
+                  class="wecare-img"
+                />
+                <div class="wecare-label success">RELIEVED</div>
+              </div>
+              <div class="wecare-card">
+                <img
+                  src="../../images/happywomen.png"
+                  alt="Happy Woman"
+                  class="wecare-img"
+                />
+                <div class="wecare-label success">BALANCED</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transformation Description -->
+          <div class="transformation-text">
+            <p class="transformation-description">
+              <span class="highlight">FitCalm</span> transforms your wellness
+              journey from stress to serenity. Our holistic approach combines
+              mental relaxation techniques with physical fitness guidance,
+              helping you overcome anxiety, reduce stress, and achieve perfect
+              balance. Experience the power of mindful breathing, targeted
+              exercises, and personalized wellness recommendations designed to
+              bring peace to your mind and strength to your body.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer Section -->
+      <footer class="footer-section" id="contact">
+        <div class="footer-overlay"></div>
+        <div class="footer-content">
+          <!-- Large Brand Name -->
+          <h1 class="footer-brand">FITCALM</h1>
+
+          <!-- Footer Bottom Info -->
+          <div class="footer-bottom">
+            <!-- Left: Copyright & Links -->
+            <div class="footer-left">
+              <p class="footer-copyright">
+                © 2026 FITCALM. ALL RIGHTS RESERVED.
+              </p>
+              <div class="footer-links">
+                <a href="#" class="footer-link">PRIVACY POLICY</a>
+                <a href="#" class="footer-link">TERMS OF SERVICE</a>
+              </div>
+            </div>
+
+            <!-- Right: Developer Credit -->
+            <div class="footer-right">
+              <div class="developer-credit">
+                <span class="developed-by">DEVELOPED BY</span>
+                <div class="developer-info">
+                  <img
+                    src="../../uday.jpeg"
+                    alt="Udayeaswar"
+                    class="developer-img"
+                  />
+                  <div class="developer-text">
+                    <span class="developer-name">UDAYEASWAR</span>
+                    <span class="developer-title"
+                      >Developer & Founder of FitCalm</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="../js/fitness.js"></script>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Session Token Checker</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .status {
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .success {
+        background: #10b981;
+      }
+      .error {
+        background: #ef4444;
+      }
+      .warning {
+        background: #f59e0b;
+      }
+      pre {
+        background: #262626;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #2563eb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 CodeCalm Session Checker</h1>
+
+    <div id="status"></div>
+
+    <h2>Actions:</h2>
+    <button onclick="checkSession()">Check Session Status</button>
+    <button onclick="testAPI()">Test CodeGent API</button>
+    <button onclick="clearSession()">Clear Session (Logout)</button>
+
+    <div id="results"></div>
+
+    <script>
+      function checkSession() {
+        const token = localStorage.getItem("session_token");
+        const user = localStorage.getItem("user");
+        const statusDiv = document.getElementById("status");
+
+        if (token) {
+          statusDiv.className = "status success";
+          statusDiv.innerHTML = `
+                    <h3>✅ Session Token Found</h3>
+                    <p><strong>Token:</strong> ${token.substring(0, 20)}...</p>
+                    <p><strong>User:</strong> ${user || "Not stored"}</p>
+                `;
+
+          // Verify with server
+          fetch("http://localhost:5000/api/auth/verify", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              const resultsDiv = document.getElementById("results");
+              resultsDiv.innerHTML = `
+                        <h3>Server Verification:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+            });
+        } else {
+          statusDiv.className = "status error";
+          statusDiv.innerHTML = `
+                    <h3>❌ No Session Token Found</h3>
+                    <p>You need to login first!</p>
+                    <p><a href="/frontend/html/login.html" style="color: white;">Go to Login</a></p>
+                `;
+        }
+      }
+
+      function testAPI() {
+        const token = localStorage.getItem("session_token");
+
+        if (!token) {
+          alert("No session token! Please login first.");
+          return;
+        }
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "<p>Testing API...</p>";
+
+        fetch("http://localhost:5000/api/codegent/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            message: "Hello, this is a test!",
+            history: [],
+            state: { step: 0 },
+            conversation_id: null,
+          }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            resultsDiv.innerHTML = `
+                    <h3>API Test Result:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    ${
+                      data.conversation_id
+                        ? `<p class="status success">✅ Conversation ID: ${data.conversation_id}</p>`
+                        : `<p class="status warning">⚠️ No conversation ID returned</p>`
+                    }
+                `;
+          })
+          .catch((err) => {
+            resultsDiv.innerHTML = `
+                    <h3>API Test Error:</h3>
+                    <pre>${err}</pre>
+                `;
+          });
+      }
+
+      function clearSession() {
+        localStorage.removeItem("session_token");
+        localStorage.removeItem("user");
+        document.getElementById("status").className = "status warning";
+        document.getElementById("status").innerHTML =
+          "<h3>Session Cleared</h3>";
+      }
+
+      // Auto-check on load
+      checkSession();
+    </script>
+  </body>
+</html>

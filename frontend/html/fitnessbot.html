@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitnessBot - AI-Powered Fitness Companion</title>
+    <link rel="stylesheet" href="../css/fitnessbot.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <!-- Welcome Screen / Profile Setup -->
+    <div id="welcome-screen" class="welcome-screen">
+      <div class="welcome-container">
+        <button
+          class="home-button"
+          onclick="window.location.href='fitness.html'"
+          title="Back to Fitness Hub"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9 22V12H15V22"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Home
+        </button>
+        <div class="welcome-header">
+          <h1>FitnessBot</h1>
+          <p class="subtitle">
+            Your AI-powered fitness companion powered by research and science
+          </p>
+        </div>
+
+        <div class="profile-form">
+          <h2>Let's get started! Tell me about yourself:</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="height">Height (cm)</label>
+              <input
+                type="number"
+                id="height"
+                min="100"
+                max="250"
+                value="170"
+                required
+              />
+              <input
+                type="range"
+                id="height-slider"
+                min="100"
+                max="250"
+                value="170"
+                class="slider"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="weight">Weight (kg)</label>
+              <input
+                type="number"
+                id="weight"
+                min="30"
+                max="200"
+                value="70"
+                required
+              />
+              <input
+                type="range"
+                id="weight-slider"
+                min="30"
+                max="200"
+                value="70"
+                class="slider"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input
+                type="number"
+                id="age"
+                min="13"
+                max="100"
+                value="25"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="goal">Fitness Goal</label>
+            <select id="goal" required>
+              <option value="weight loss">Weight Loss</option>
+              <option value="muscle gain">Muscle Gain</option>
+              <option value="endurance">Endurance</option>
+              <option value="flexibility">Flexibility</option>
+              <option value="general fitness" selected>General Fitness</option>
+              <option value="athletic performance">Athletic Performance</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fitness-level">Current Fitness Level</label>
+            <select id="fitness-level" required>
+              <option value="beginner" selected>Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Equipment Available</label>
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" value="None" checked /> None
+                (Bodyweight)</label
+              >
+              <label
+                ><input type="checkbox" value="Dumbbells" /> Dumbbells</label
+              >
+              <label
+                ><input type="checkbox" value="Resistance Bands" /> Resistance
+                Bands</label
+              >
+              <label
+                ><input type="checkbox" value="Pull-up Bar" /> Pull-up
+                Bar</label
+              >
+              <label
+                ><input type="checkbox" value="Gym Access" /> Gym Access</label
+              >
+              <label
+                ><input type="checkbox" value="Home Equipment" /> Home
+                Equipment</label
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="limitations">Any injuries or limitations?</label>
+            <textarea
+              id="limitations"
+              rows="3"
+              placeholder="E.g., lower back pain, knee issues, etc."
+            ></textarea>
+          </div>
+
+          <div class="bmi-display" id="bmi-display">
+            <p>
+              BMI: <span id="bmi-value">-</span> (<span id="bmi-category"
+                >-</span
+              >)
+            </p>
+          </div>
+
+          <button class="start-button" id="start-button">
+            🚀 Start My Fitness Journey
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="main-interface" class="main-interface" style="display: none">
+      <!-- Left Side - Robot Animation -->
+      <div class="robot-container">
+        <div class="robot-card">
+          <div id="robot-canvas-container">
+            <canvas id="robot-canvas"></canvas>
+          </div>
+          <div class="robot-info">
+            <h1 class="robot-title">FitnessBot</h1>
+            <p class="robot-subtitle">
+              Your AI-powered fitness companion that analyzes your height,
+              weight, and goals to recommend personalized workout routines with
+              or without equipment.
+            </p>
+            <div class="robot-status" id="robot-status">
+              <span class="status-dot"></span>
+              <span id="status-text">Ready to help</span>
+            </div>
+            <div class="user-stats" id="user-stats" style="display: none">
+              <div class="stat-item">
+                <span class="stat-label">BMI:</span>
+                <span class="stat-value" id="stat-bmi">-</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Target Calories:</span>
+                <span class="stat-value" id="stat-calories">-</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Protein:</span>
+                <span class="stat-value" id="stat-protein">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Chat Interface -->
+      <div class="chat-container">
+        <div class="chat-header">
+          <h2>Fitness Chat</h2>
+          <div class="header-buttons">
+            <button
+              class="home-button-small"
+              onclick="window.location.href='fitness.html'"
+              title="Back to Fitness Hub"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9 22V12H15V22"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Home
+            </button>
+            <button class="new-chat-button" id="new-chat">New Session</button>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <!-- Messages will be added here dynamically -->
+        </div>
+
+        <div
+          class="typing-indicator"
+          id="typing-indicator"
+          style="display: none"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="chat-input-container">
+          <textarea
+            id="chat-input"
+            placeholder="Ask me about workouts, nutrition, exercises..."
+            rows="1"
+          ></textarea>
+          <button class="send-button" id="send-button">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M22 2L11 13"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M22 2L15 22L11 13L2 9L22 2Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <button
+            class="voice-button"
+            id="voice-button"
+            title="Voice input coming soon"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 1C10.34 1 9 2.34 9 4V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V4C15 2.34 13.66 1 12 1Z"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M19 10V12C19 15.87 15.87 19 12 19C8.13 19 5 15.87 5 12V10"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12 19V23"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/fitnessbot.js"></script>
+  </body>
+</html>

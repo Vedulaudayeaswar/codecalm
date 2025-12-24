@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeGent - AI Coding Tutor | CodeCalm</title>
+    <link rel="stylesheet" href="../css/codegent.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar with Analytics -->
+      <div class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient
+                  id="logoGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style="stop-color: #00d4ff; stop-opacity: 1"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color: #7b2ff7; stop-opacity: 1"
+                  />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="24"
+                cy="24"
+                r="20"
+                fill="url(#logoGradient)"
+                opacity="0.2"
+              />
+              <path
+                d="M 15 24 L 20 19 L 25 24 L 30 19 L 33 22"
+                fill="none"
+                stroke="url(#logoGradient)"
+                stroke-width="2"
+              />
+              <circle cx="24" cy="24" r="3" fill="url(#logoGradient)" />
+            </svg>
+          </div>
+          <h2>🤖 CodeGent</h2>
+          <p class="subtitle">Your Socratic Coding Tutor</p>
+        </div>
+
+        <div class="stats-panel">
+          <h3>📊 AI Model Analytics</h3>
+          <p class="stats-description">Real-time routing decisions</p>
+
+          <div class="model-stats" id="model-stats">
+            <div class="stat-card claude-card">
+              <div class="stat-header">
+                <span class="model-icon">🧠</span>
+                <span class="model-name">Claude</span>
+              </div>
+              <div class="stat-body">
+                <div class="stat-row">
+                  <span class="stat-label">Purpose:</span>
+                  <span class="stat-value">Coding Tasks</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Queries:</span>
+                  <span class="stat-value" id="claude-queries">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Tokens:</span>
+                  <span class="stat-value" id="claude-tokens">0</span>
+                </div>
+                <div class="stat-bar">
+                  <div
+                    class="stat-bar-fill claude-bar"
+                    id="claude-bar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card gpt-card">
+              <div class="stat-header">
+                <span class="model-icon">🎓</span>
+                <span class="model-name">GPT-4</span>
+              </div>
+              <div class="stat-body">
+                <div class="stat-row">
+                  <span class="stat-label">Purpose:</span>
+                  <span class="stat-value">Teaching</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Queries:</span>
+                  <span class="stat-value" id="gpt-queries">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Tokens:</span>
+                  <span class="stat-value" id="gpt-tokens">0</span>
+                </div>
+                <div class="stat-bar">
+                  <div
+                    class="stat-bar-fill gpt-bar"
+                    id="gpt-bar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card gemini-card">
+              <div class="stat-header">
+                <span class="model-icon">💬</span>
+                <span class="model-name">Gemini</span>
+              </div>
+              <div class="stat-body">
+                <div class="stat-row">
+                  <span class="stat-label">Purpose:</span>
+                  <span class="stat-value">Conversation</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Queries:</span>
+                  <span class="stat-value" id="gemini-queries">0</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Tokens:</span>
+                  <span class="stat-value" id="gemini-tokens">0</span>
+                </div>
+                <div class="stat-bar">
+                  <div
+                    class="stat-bar-fill gemini-bar"
+                    id="gemini-bar"
+                    style="width: 0%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <h4>Token Distribution</h4>
+            <canvas id="token-chart"></canvas>
+          </div>
+
+          <div class="routing-decisions" id="routing-decisions">
+            <h4>🎯 Recent Routing Decisions</h4>
+            <div class="decisions-list" id="decisions-list">
+              <p class="no-decisions">No queries yet. Start chatting!</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="back-btn"
+          onclick="window.location.href='../../index.html'"
+        >
+          ← Back to Home
+        </button>
+      </div>
+
+      <!-- Main Chat Area -->
+      <div class="main-content">
+        <div class="chat-header">
+          <h1>CodeGent - Socratic Coding Tutor</h1>
+          <p>I teach by asking questions, not giving answers! 🎯</p>
+        </div>
+
+        <div class="chat-container">
+          <div id="chat-messages" class="chat-messages">
+            <!-- Welcome message will be added by JS -->
+          </div>
+
+          <div id="analyzing" class="analyzing hidden">
+            <div class="spinner-container">
+              <div class="spinner"></div>
+              <div class="spinner-glow"></div>
+            </div>
+            <div class="analyzing-text-container">
+              <span id="analyzing-text">Analyzing your question...</span>
+              <span class="analyzing-dots">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <div class="input-wrapper">
+            <textarea
+              id="user-input"
+              placeholder="Ask me anything about coding... (e.g., 'How do I print the first 10 numbers?' or 'Explain recursion')"
+              rows="1"
+            ></textarea>
+            <button id="send-btn" aria-label="Send message">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="input-hints">
+            <span class="hint"
+              >💡 Tip: I guide you step-by-step - no instant solutions!</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../js/codegent.js"></script>
+  </body>
+</html>
