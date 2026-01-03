@@ -4,8 +4,8 @@ services:
     name: codecalm
     runtime: python
     plan: free
-    buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt && cd backend && python setup_database.py && cd .."
-    startCommand: "gunicorn --chdir backend --bind 0.0.0.0:$PORT main:app --workers 2 --timeout 120"
+    buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
+    startCommand: "gunicorn --chdir backend --bind 0.0.0.0:$PORT main:app --workers 2 --timeout 120 --preload"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
