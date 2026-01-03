@@ -33,10 +33,32 @@ def check_postgresql():
         return False
 
 def create_database():
-    """Interactive database creation"""
+    """Get database configuration from environment or interactive input"""
     print("📋 Database Configuration")
     print("-" * 70)
     
+    # Check if running in non-interactive environment (like Render)
+    # DATABASE_URL will be set by Render automatically
+    database_url = os.getenv('DATABASE_URL')
+    
+    if database_url:
+        print(f"✅ Using DATABASE_URL from environment")
+        # Extract db_name, user, password from URL for display purposes
+        # Format: postgresql://user:password@host:port/dbname
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(database_url)
+            db_name = parsed.path.lstrip('/')
+            db_user = parsed.username or 'postgres'
+            db_password = parsed.password or ''
+            print(f"✅ Database: {db_name}")
+            print(f"✅ User: {db_user}")
+            return database_url, db_name, db_user, db_password
+        except:
+            # If parsing fails, just return dummy values
+            return database_url, 'codecalm', 'postgres', ''
+    
+    # Interactive mode for local development
     db_name = input("Enter database name [codecalm]: ").strip() or "codecalm"
     db_user = input("Enter database username [postgres]: ").strip() or "postgres"
     db_password = input("Enter database password: ").strip()
@@ -130,31 +152,41 @@ def initialize_tables():
         return False
 
 def main():
-    """Main setup flow"""
+    """Main setup workflow"""
     print_header("CodeCalm Database Setup")
+    
+    # Check if running in production with DATABASE_URL already set
+    is_production = os.getenv('DATABASE_URL') is not None
     
     # Step 1: Check PostgreSQL
     if not check_postgresql():
-        print("❌ PostgreSQL is not installed or not in PATH")
-        print("\n📥 Install PostgreSQL:")
-        print("   Windows: https://www.postgresql.org/download/windows/")
-        print("   Mac: brew install postgresql")
-        print("   Linux: sudo apt-get install postgresql")
-        sys.exit(1)
+        if is_production:
+            print("ℹ️  PostgreSQL CLI not available (normal for cloud deployments)")
+        else:
+            print("❌ PostgreSQL is not installed or not in PATH")
+            print("\n📥 Install PostgreSQL:")
+            print("   Windows: https://www.postgresql.org/download/windows/")
+            print("   Mac: brew install postgresql")
+            print("   Linux: sudo apt-get install postgresql")
+            sys.exit(1)
     
     # Step 2: Get database configuration
     print_header("Step 1: Database Configuration")
     database_url, db_name, db_user, db_password = create_database()
     
-    # Step 3: Create database
-    print_header("Step 2: Create Database")
-    if not create_database_postgresql(db_name, db_user, db_password):
-        print("❌ Setup cancelled. Please create the database and run this script again.")
-        sys.exit(1)
-    
-    # Step 4: Create .env file
-    print_header("Step 3: Environment Configuration")
-    create_env_file(database_url)
+    # Step 3: Create database (skip in production)
+    if not is_production:
+        print_header("Step 2: Create Database")
+        if not create_database_postgresql(db_name, db_user, db_password):
+            print("❌ Setup cancelled. Please create the database and run this script again.")
+            sys.exit(1)
+        
+        # Step 4: Create .env file
+        print_header("Step 3: Environment Configuration")
+        create_env_file(database_url)
+    else:
+        print("ℹ️  Skipping database creation (using DATABASE_URL from environment)")
+        print("ℹ️  Skipping .env file creation (using environment variables)")
     
     # Step 5: Initialize tables
     print_header("Step 4: Initialize Tables")
@@ -165,10 +197,13 @@ def main():
     # Success!
     print_header("✅ Setup Complete!")
     print("Your CodeCalm database is ready to use!")
-    print("\n📝 Next steps:")
-    print("   1. Review the .env file and add API keys (GROQ_API_KEY, etc.)")
-    print("   2. Run: python main.py")
-    print("   3. Access the platform at http://localhost:5000")
+    
+    if not is_production:
+        print("\n📝 Next steps:")
+        print("   1. Review the .env file and add API keys (GROQ_API_KEY, etc.)")
+        print("   2. Run: python main.py")
+        print("   3. Access the platform at http://localhost:5000")
+    
     print("\n💡 API Endpoints:")
     print("   - POST /api/auth/register - Register new user")
     print("   - POST /api/auth/login - Login user")
