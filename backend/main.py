@@ -677,23 +677,6 @@ def index():
     """Landing page"""
     return send_from_directory('..', 'index.html')
 
-@app.route('/health')
-def health_check():
-    """Health check endpoint for Render"""
-    try:
-        # Check database connection
-        db.session.execute(db.text('SELECT 1'))
-        db_status = 'healthy'
-    except Exception as e:
-        db_status = f'unhealthy: {str(e)}'
-    
-    return jsonify({
-        'status': 'healthy',
-        'database': db_status,
-        'groq_available': groq_available,
-        'use_langgraph': USE_LANGGRAPH
-    }), 200
-
 @app.route('/index.html')
 def serve_index_html():
     """Serve index.html explicitly"""

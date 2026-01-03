@@ -25,7 +25,7 @@ services:
         sync: false
       - key: OPEN_WEATHER_API_KEY
         sync: false
-    healthCheckPath: /health
+    healthCheckPath: /api/health
     autoDeploy: true
 
 databases:
