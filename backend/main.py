@@ -677,6 +677,23 @@ def index():
     """Landing page"""
     return send_from_directory('..', 'index.html')
 
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Render"""
+    try:
+        # Check database connection
+        db.session.execute(db.text('SELECT 1'))
+        db_status = 'healthy'
+    except Exception as e:
+        db_status = f'unhealthy: {str(e)}'
+    
+    return jsonify({
+        'status': 'healthy',
+        'database': db_status,
+        'groq_available': groq_available,
+        'use_langgraph': USE_LANGGRAPH
+    }), 200
+
 @app.route('/index.html')
 def serve_index_html():
     """Serve index.html explicitly"""
@@ -2351,6 +2368,7 @@ if __name__ == '__main__':
     import time
     
     port = 5000
+    is_production = os.getenv('FLASK_ENV') == 'production'
     
     # Display startup banner
     logger.info("=" * 60)
@@ -2373,14 +2391,15 @@ if __name__ == '__main__':
     logger.info("✅ Ready for connections!")
     logger.info("=" * 60)
     
-    # Auto-open website in browser after short delay
-    def open_browser():
-        time.sleep(1.5)  # Wait for server to start
-        webbrowser.open(f'http://localhost:{port}')
-        logger.info("🌐 Opening CodeCalm website in browser...")
-    
-    # Start browser opening in background thread
-    threading.Thread(target=open_browser, daemon=True).start()
+    # Auto-open website in browser (only in development)
+    if not is_production:
+        def open_browser():
+            time.sleep(1.5)  # Wait for server to start
+            webbrowser.open(f'http://localhost:{port}')
+            logger.info("🌐 Opening CodeCalm website in browser...")
+        
+        # Start browser opening in background thread
+        threading.Thread(target=open_browser, daemon=True).start()
     
     # Start Flask server
-    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=False)
+    app.run(debug=not is_production, host='0.0.0.0', port=port, use_reloader=False)

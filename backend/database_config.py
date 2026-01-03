@@ -15,23 +15,28 @@ load_dotenv()
 class DatabaseConfig:
     """Database configuration settings"""
     
-    # PostgreSQL connection
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        'DATABASE_URL',
-        'postgresql://postgres:postgres@localhost:5432/codecalm'  # Default for development
-    )
+    # Get DATABASE_URL from environment
+    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///codecalm.db')
+    
+    # Fix for Render PostgreSQL URL (postgres:// -> postgresql://)
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    
+    # PostgreSQL or SQLite connection
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     
     # SQLAlchemy settings
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = os.getenv('FLASK_ENV') == 'development'  # Log SQL queries in dev mode
     
-    # Connection pool settings for production
+    # Connection pool settings (only for PostgreSQL)
+    is_postgres = DATABASE_URL.startswith('postgresql://')
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_size': 10,
         'pool_recycle': 3600,
         'pool_pre_ping': True,
         'max_overflow': 20
-    }
+    } if is_postgres else {}
     
     # Session configuration
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
