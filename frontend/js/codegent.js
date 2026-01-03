@@ -325,7 +325,11 @@ async function sendMessage() {
       console.log("⚠️ No session token found - conversations won't be saved");
     }
 
-    const response = await fetch("http://localhost:5000/api/codegent/chat", {
+    const API_BASE =
+      window.location.hostname === "localhost"
+        ? "http://localhost:5000"
+        : window.location.origin;
+    const response = await fetch(`${API_BASE}/api/codegent/chat`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -394,7 +398,11 @@ async function sendMessage() {
 // Fetch statistics from backend
 async function fetchStats() {
   try {
-    const response = await fetch("http://localhost:5000/api/codegent/stats");
+    const API_BASE =
+      window.location.hostname === "localhost"
+        ? "http://localhost:5000"
+        : window.location.origin;
+    const response = await fetch(`${API_BASE}/api/codegent/stats`);
     if (response.ok) {
       const data = await response.json();
       if (data.success) {

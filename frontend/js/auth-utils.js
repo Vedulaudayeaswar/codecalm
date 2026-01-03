@@ -3,8 +3,14 @@
  * Manages user authentication state across the platform
  */
 
-const AUTH_API_BASE = "http://localhost:5000/api/auth";
-const CHAT_API_BASE = "http://localhost:5000/api/chat";
+// Detect if running locally or in production
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : window.location.origin;
+
+const AUTH_API_BASE = `${API_BASE}/api/auth`;
+const CHAT_API_BASE = `${API_BASE}/api/chat`;
 
 // =============================================================================
 // AUTHENTICATION HELPERS

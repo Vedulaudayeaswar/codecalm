@@ -864,7 +864,10 @@ function speakResponse(text) {
 }
 
 // ===== API CONFIGURATION =====
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : window.location.origin;
 
 let conversationStarted = false;
 

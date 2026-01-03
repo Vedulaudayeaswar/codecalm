@@ -235,8 +235,12 @@ class WeatherFoodBot {
 
   async getWeatherData() {
     try {
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:5000"
+          : window.location.origin;
       const response = await fetch(
-        `http://localhost:5000/api/weather?city=${encodeURIComponent(
+        `${API_BASE}/api/weather?city=${encodeURIComponent(
           this.userPreferences.location
         )}`
       );
@@ -384,23 +388,23 @@ class WeatherFoodBot {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/weather-food/recommend",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            diet_type: this.userPreferences.dietType,
-            goal: this.userPreferences.fitnessGoal,
-            restrictions:
-              this.userPreferences.restrictions.join(", ") || "none",
-            city: this.userPreferences.location,
-            weather_data: this.weatherData,
-          }),
-        }
-      );
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:5000"
+          : window.location.origin;
+      const response = await fetch(`${API_BASE}/api/weather-food/recommend`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          diet_type: this.userPreferences.dietType,
+          goal: this.userPreferences.fitnessGoal,
+          restrictions: this.userPreferences.restrictions.join(", ") || "none",
+          city: this.userPreferences.location,
+          weather_data: this.weatherData,
+        }),
+      });
 
       const data = await response.json();
 
@@ -558,25 +562,24 @@ class WeatherFoodBot {
     content.innerHTML = "";
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/weather-food/meal-plan",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            diet_type: this.userPreferences.dietType,
-            goal: this.userPreferences.fitnessGoal,
-            city: this.userPreferences.location,
-            restrictions:
-              this.userPreferences.restrictions.join(", ") || "none",
-            weather_data: this.weatherData,
-            current_recommendations:
-              this.recommendations?.recommendations || "",
-          }),
-        }
-      );
+      const API_BASE =
+        window.location.hostname === "localhost"
+          ? "http://localhost:5000"
+          : window.location.origin;
+      const response = await fetch(`${API_BASE}/api/weather-food/meal-plan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          diet_type: this.userPreferences.dietType,
+          goal: this.userPreferences.fitnessGoal,
+          city: this.userPreferences.location,
+          restrictions: this.userPreferences.restrictions.join(", ") || "none",
+          weather_data: this.weatherData,
+          current_recommendations: this.recommendations?.recommendations || "",
+        }),
+      });
 
       const data = await response.json();
 

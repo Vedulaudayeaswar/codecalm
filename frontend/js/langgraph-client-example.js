@@ -13,7 +13,12 @@
 // =============================================================================
 
 class LangGraphAgentClient {
-  constructor(agentType, apiUrl = "http://localhost:5000") {
+  constructor(
+    agentType,
+    apiUrl = window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : window.location.origin
+  ) {
     this.agentType = agentType; // 'student', 'professional', 'fitness', etc.
     this.apiUrl = apiUrl;
     this.conversationId = null;
