@@ -34,32 +34,32 @@ http://localhost:5000/frontend/html/codetest.html
 
 ### What CodeTest Does
 
-| Feature | Description |
-| --- | --- |
-| Code upload | Accepts `.py`, `.cpp`, and `.go` source files through `POST /upload` |
-| Language detection | Detects Python, C++, or Go from file extension |
-| Docker execution | Generates a Dockerfile, builds an image, and runs code with memory and CPU limits |
-| Bot load generation | Simulates high-concurrency trading bots with BUY, SELL, and CANCEL orders |
-| Kafka telemetry | Bot workers publish benchmark events to Kafka |
-| Metrics aggregation | Consumes Kafka events and calculates TPS, p50, p90, p99, failures, and error rate |
-| Redis live state | Stores live metrics and publishes real-time updates with Redis pub/sub |
-| WebSocket dashboard | Broadcasts live JSON metrics to the frontend dashboard |
-| Deployment artifacts | Includes Dockerfiles, Docker Compose, and Kubernetes manifests |
+| Feature              | Description                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
+| Code upload          | Accepts `.py`, `.cpp`, and `.go` source files through `POST /upload`              |
+| Language detection   | Detects Python, C++, or Go from file extension                                    |
+| Docker execution     | Generates a Dockerfile, builds an image, and runs code with memory and CPU limits |
+| Bot load generation  | Simulates high-concurrency trading bots with BUY, SELL, and CANCEL orders         |
+| Kafka telemetry      | Bot workers publish benchmark events to Kafka                                     |
+| Metrics aggregation  | Consumes Kafka events and calculates TPS, p50, p90, p99, failures, and error rate |
+| Redis live state     | Stores live metrics and publishes real-time updates with Redis pub/sub            |
+| WebSocket dashboard  | Broadcasts live JSON metrics to the frontend dashboard                            |
+| Deployment artifacts | Includes Dockerfiles, Docker Compose, and Kubernetes manifests                    |
 
 ### CodeTest Tech Stack
 
-| Layer | Technology |
-| --- | --- |
-| Existing app backend | Python, Flask, SQLAlchemy |
-| CodeTest services | Go |
-| Upload API | Gin |
-| WebSocket server | Gorilla WebSocket |
-| Event streaming | Kafka |
-| Live metrics cache | Redis / Render Key Value compatible Redis |
-| Container execution | Docker |
-| Local orchestration | Docker Compose |
-| Cluster orchestration | Kubernetes |
-| Frontend dashboard | HTML, CSS, JavaScript, Canvas charts |
+| Layer                 | Technology                                |
+| --------------------- | ----------------------------------------- |
+| Existing app backend  | Python, Flask, SQLAlchemy                 |
+| CodeTest services     | Go                                        |
+| Upload API            | Gin                                       |
+| WebSocket server      | Gorilla WebSocket                         |
+| Event streaming       | Kafka                                     |
+| Live metrics cache    | Redis / Render Key Value compatible Redis |
+| Container execution   | Docker                                    |
+| Local orchestration   | Docker Compose                            |
+| Cluster orchestration | Kubernetes                                |
+| Frontend dashboard    | HTML, CSS, JavaScript, Canvas charts      |
 
 ### CodeTest Architecture
 
@@ -116,14 +116,14 @@ python main.py
 
 This starts the normal Flask app and attempts to autostart CodeTest Go services:
 
-| Service | URL |
-| --- | --- |
-| CodeCalm app | `http://localhost:5000` |
+| Service            | URL                                                 |
+| ------------------ | --------------------------------------------------- |
+| CodeCalm app       | `http://localhost:5000`                             |
 | CodeTest dashboard | `http://localhost:5000/frontend/html/codetest.html` |
-| CodeTest status | `http://localhost:5000/api/codetest/status` |
-| Upload API | `http://localhost:8081` |
-| Botload API | `http://localhost:8082` |
-| Metrics WebSocket | `ws://localhost:8084/ws/metrics` |
+| CodeTest status    | `http://localhost:5000/api/codetest/status`         |
+| Upload API         | `http://localhost:8081`                             |
+| Botload API        | `http://localhost:8082`                             |
+| Metrics WebSocket  | `ws://localhost:8084/ws/metrics`                    |
 
 Check this endpoint after startup:
 
@@ -150,42 +150,48 @@ docker compose --profile load up --build botload
 
 The dashboard can then receive live metrics through Redis pub/sub and WebSocket updates.
 
-### Deployment Workflow
+---
 
-```mermaid
-flowchart TD
-    A[Push Code to GitHub] --> B[Render Auto Deploys CodeCalm Flask App]
-    B --> C[CodeGent and CodeTest UI Available]
-    C --> D{Need Full Benchmark Stack?}
-    D -->|No| E[Use Render Web App Only]
-    D -->|Yes| F[Deploy CodeTest Services Separately]
-    F --> G[Docker Compose on VPS or Kubernetes Cluster]
-    F --> H[Managed Redis / Render Key Value]
-    F --> I[Managed Kafka or Kafka Cluster]
-    G --> J[Expose Upload, Botload, and WebSocket URLs]
-    H --> J
-    I --> J
-    J --> K[Set Frontend/API Environment URLs]
+## 🔗 CodeGent + CodeTest Integration
+
+**CodeGent** is an advanced coding assistant with multi-LLM routing and intelligent code generation. **CodeTest** is a distributed benchmarking platform for stress-testing submitted code. Together, they provide a complete code-to-benchmark workflow.
+
+### CodeGent → CodeTest Workflow
+
+1. **CodeGent** - Write, debug, or optimize code with AI assistance
+2. **Switch to CodeTest** - Navigate to the CodeTest dashboard from CodeGent
+3. **Upload Code** - Submit Python, C++, or Go files
+4. **Execute & Benchmark** - CodeTest runs your code in Docker with resource limits
+5. **Load Test** - Simulate high-concurrency scenarios with trading bot workers
+6. **Live Metrics** - Watch real-time performance (TPS, latency, p99, errors) on the dashboard
+7. **Iterate** - Use results to optimize in CodeGent
+
+### Key Features
+
+- **Multi-LLM in CodeGent**: Switch between Llama 3.3, Claude, GPT-4, Gemini for different coding tasks
+- **Isolated Execution**: Each submission runs in a Docker container with memory/CPU limits
+- **Realistic Load**: Kafka-based bot workers simulate concurrent trading scenarios
+- **Real-time Dashboard**: Canvas-based charts stream metrics via WebSocket
+- **Production-Ready**: Full Docker/K8s deployment artifacts included
+
+### API Endpoints for CodeTest
+
+```http
+# Code upload & execution
+POST /upload - Submit code file (returns submission ID)
+GET /submissions/{id}/logs - View execution logs
+
+# Bot load testing
+POST /benchmark/start - Start trading bot load test
+POST /benchmark/stop - Stop active load test
+WS ws://localhost:8084/ws/metrics - Live metrics WebSocket stream
+
+# Metrics query
+GET /metrics/latest - Latest aggregated metrics
+GET /metrics/history - Historical metrics (if Redis persisted)
 ```
 
-### GitHub + Render Rehost Checklist
-
-| Step | What to do | Notes |
-| --- | --- | --- |
-| 1 | Push the updated repo to GitHub | Include `main.py`, `backend/`, `frontend/`, and `codetest/` |
-| 2 | Create or reconnect a Render Web Service | Use the existing Flask deployment style |
-| 3 | Set build command | `pip install -r backend/requirements.txt` |
-| 4 | Set start command | `gunicorn --chdir backend --bind 0.0.0.0:$PORT main:app --workers 2 --timeout 120` |
-| 5 | Add environment variables | `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `DATABASE_URL`, `FLASK_SECRET_KEY`, etc. |
-| 6 | Set `CODETEST_AUTOSTART=false` on Render | Render web services should not try to launch local Go helper processes |
-| 7 | Deploy | CodeCalm, CodeGent, and the CodeTest dashboard UI will be hosted |
-| 8 | Deploy full CodeTest stack separately if needed | Use Docker Compose on a VPS or Kubernetes manifests under `codetest/deploy/k8s` |
-| 9 | Connect Redis/Kafka | Use managed services or your Kubernetes services |
-| 10 | Point the dashboard at live CodeTest APIs | Update API URLs if they are not on the same host |
-
-Render is still good for the main CodeCalm web app. The full CodeTest benchmark system is heavier because it needs Docker-based code execution, Kafka, Redis, and long-running Go services. For production benchmarking, deploy CodeTest on Kubernetes or a VPS where Docker/Kafka/Redis are first-class services.
-
-Useful Render docs:
+---
 
 - Docker services: <https://render.com/docs/docker>
 - Key Value / Redis-compatible service: <https://render.com/docs/key-value>
@@ -211,15 +217,15 @@ Useful Render docs:
 
 ### 🤖 **7 Specialized AI Assistants**
 
-| Assistant                     | Purpose                           | Key Features                                                          |
-| ----------------------------- | --------------------------------- | --------------------------------------------------------------------- |
-| **👨‍🎓 StudentBot (Maya)**      | Academic support & study planning | Exam stress management, study techniques, motivation                  |
-| **👨‍👩‍👧 ParentBot**              | Parenting guidance                | Child development advice, emotional support, work-life balance        |
-| **💼 ProfessionalBot (Luna)** | Career & workplace wellness       | Work stress management, productivity tips, career guidance            |
-| **🤖 CodeGent**               | Advanced coding assistant         | Multi-LLM routing (Claude/GPT-4/Gemini), code generation, debugging   |
-| **💪 FitnessBot**             | Health & fitness coaching         | Research-backed workouts & nutrition (Tavily API for academic papers) |
-| **🍽️ WeatherFood**            | Meal planning                     | Weather-based meal suggestions, recipe ideas                          |
-| **🧘 ZenMode**                | Mindfulness & meditation          | Breathing exercises, guided meditation, stress relief                 |
+| Assistant                     | Purpose                           | Key Features                                                                          |
+| ----------------------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
+| **👨‍🎓 StudentBot (Maya)**      | Academic support & study planning | Exam stress management, study techniques, motivation                                  |
+| **👨‍👩‍👧 ParentBot**              | Parenting guidance                | Child development advice, emotional support, work-life balance                        |
+| **💼 ProfessionalBot (Luna)** | Career & workplace wellness       | Work stress management, productivity tips, career guidance                            |
+| **🤖 CodeGent**               | Advanced coding assistant         | Multi-LLM routing, code generation, debugging, distributed benchmarking with CodeTest |
+| **💪 FitnessBot**             | Health & fitness coaching         | Research-backed workouts & nutrition (Tavily API for academic papers)                 |
+| **🍽️ WeatherFood**            | Meal planning                     | Weather-based meal suggestions, recipe ideas                                          |
+| **🧘 ZenMode**                | Mindfulness & meditation          | Breathing exercises, guided meditation, stress relief                                 |
 
 ### 🎨 **Core Capabilities**
 
@@ -233,17 +239,21 @@ Useful Render docs:
 - ✅ **3D Visualizations** - Three.js powered interactive graphics, animations & immersive user experiences
 - ✅ **Responsive Design** - Modern, mobile-friendly interface
 - ✅ **Real-time Chat** - Instant messaging with typing indicators
+- ✅ **CodeTest Benchmarking** - Distributed code execution with Docker isolation
+- ✅ **Live Metrics Dashboard** - Real-time performance metrics via WebSocket & Redis pub/sub
+- ✅ **Bot Load Generation** - Concurrent trading bot simulation with Kafka telemetry
+- ✅ **Multi-Language Support** - Python, C++, Go code execution in CodeTest
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Backend**
+### **CodeCalm Backend (Python/Flask)**
 
 ```
 🐍 Python 3.9+
 🌶️ Flask 3.0.0                 - Web framework
-🗄️ PostgreSQL                  - Production database
+🗄️ PostgreSQL 14+              - Production database
 🔗 SQLAlchemy 2.0+             - ORM
 🔐 Werkzeug 3.0.1              - Security utilities
 🤖 LangGraph 0.2.45            - Agent orchestration
@@ -252,24 +262,42 @@ Useful Render docs:
 🌐 OpenRouter                  - Multi-model access (Claude, GPT-4, Gemini)
 🔍 Tavily API                  - Research paper search & academic information retrieval
 🦙 Ollama (Optional)           - Local DeepSeek-R1 1.5B
+🦄 Gunicorn 21.2.0            - WSGI server
+🔧 Python Dotenv              - Environment management
+📦 pip                        - Package management
 ```
 
-### **Frontend**
+### **CodeTest Distributed Benchmarking (Go/Kafka/Redis)**
+
+```
+🐹 Go 1.21+                    - High-performance services
+🌐 Gin                         - REST API framework
+🔌 Gorilla WebSocket           - Real-time metrics streaming
+🚀 Kafka                       - Event streaming & telemetry
+💾 Redis                       - Live metrics caching & pub/sub
+🐳 Docker                      - Container execution & isolation
+🐙 Docker Compose              - Local orchestration
+☸️  Kubernetes                  - Production cluster orchestration
+```
+
+### **Frontend (CodeCalm + CodeTest Dashboard)**
 
 ```
 📄 HTML5 / CSS3 / JavaScript (Vanilla)
 🎨 Three.js                    - 3D graphics, interactive visualizations & immersive designs
+📊 Canvas API                  - Real-time metrics charting (CodeTest)
 🎨 Glassmorphism Design        - Modern UI aesthetics
 📱 Responsive Layout           - Mobile-first approach
 ✨ Smooth Animations           - Enhanced user experience
 ```
 
-### **DevOps**
+### **Development & DevOps**
 
 ```
-🦄 Gunicorn 21.2.0            - WSGI server
-🔧 Python Dotenv              - Environment management
-📦 pip                        - Package management
+📦 git                         - Version control
+🐳 Docker Desktop              - Local containerization
+☸️  kubectl                     - Kubernetes management
+🔧 Environment Management      - Python Dotenv
 ```
 
 ---
@@ -538,7 +566,7 @@ python test_langgraph_agents.py
 
 ## 🏗️ Architecture
 
-### **LangGraph Multi-Agent Workflow**
+### **CodeCalm - LangGraph Multi-Agent Workflow**
 
 ```
 ┌─────────────┐
@@ -547,22 +575,22 @@ python test_langgraph_agents.py
        │
        ▼
 ┌─────────────┐
-│Router Node  │ ◄── Determines agent type
+│Router Node  │ ◄── Determines agent type (Student/Parent/Professional/CodeGent/Fitness/Weather/Zen)
 └──────┬──────┘
        │
        ▼
 ┌──────────────────┐
-│Specialized Agent │ ◄── Student/Parent/Professional/etc.
+│Specialized Agent │ ◄── Agent-specific logic & Tavily research integration
 └──────┬───────────┘
        │
        ▼
 ┌──────────────────┐
-│  LLM (Groq)      │ ◄── Llama 3.3 70B / Claude / GPT-4
+│  LLM (Groq/OpenRouter)  │ ◄── Llama 3.3 70B / Claude / GPT-4 / Gemini
 └──────┬───────────┘
        │
        ▼
 ┌──────────────────┐
-│Response Enhance  │ ◄── Mood detection + Empathy
+│Response Enhance  │ ◄── Mood detection + Empathy scaling
 └──────┬───────────┘
        │
        ▼
@@ -576,15 +604,57 @@ python test_langgraph_agents.py
 └──────────────────┘
 ```
 
+### **CodeTest - Distributed Benchmarking Architecture**
+
+```
+┌──────────────────┐
+│ CodeTest Dashboard │ (HTML/CSS/JS/Canvas)
+└────────┬─────────┘
+         │
+    ┌────┴─────┬────────────┐
+    │           │            │
+    ▼           ▼            ▼
+┌──────────┐ ┌────────┐ ┌──────────┐
+│ Upload   │ │Botload │ │ Metrics  │
+│  (Gin)   │ │(Worker)│ │Query     │
+└────┬─────┘ └────┬───┘ └──────────┘
+     │            │
+     ▼            ▼
+  ┌────────────────────┐
+  │   Docker Engine    │
+  │ (Container Exec)   │
+  └────────────────────┘
+
+     & Kafka Event Stream
+
+  ┌────────────────────┐
+  │  Metrics Aggregator│ (Go)
+  │  (TPS, p50/p90/p99)│
+  └────────┬───────────┘
+           │
+           ▼
+  ┌────────────────────┐
+  │  Redis Cache       │ (Live metrics + pub/sub)
+  └────────┬───────────┘
+           │
+           ▼
+  ┌────────────────────┐
+  │ WebSocket Server   │ (Gorilla/Gin)
+  │ (Broadcasts JSON)  │
+  └────────────────────┘
+           │
+           └─► Dashboard Updates
+```
+
 ---
 
 ## 📁 Project Structure
 
 ```
 CodeCalm/
-├── backend/
+├── backend/                       # Python/Flask - Main app & LangGraph agents
 │   ├── main.py                    # Flask app & API endpoints
-│   ├── agent_graph.py             # LangGraph deep agents
+│   ├── agent_graph.py             # LangGraph deep agents (7 assistants)
 │   ├── agent_tools.py             # AI helper utilities
 │   ├── models.py                  # Database models
 │   ├── auth.py                    # Authentication routes
@@ -594,25 +664,51 @@ CodeCalm/
 │   ├── setup_database.py          # Database initialization
 │   └── test_langgraph_agents.py   # Test suite
 │
-├── frontend/
+├── frontend/                      # Web UI - CodeCalm + CodeTest Dashboard
 │   ├── html/
 │   │   ├── login.html             # Login/signup page
-│   │   ├── student.html           # StudentBot interface
+│   │   ├── student.html           # StudentBot (Maya) interface
 │   │   ├── parent.html            # ParentBot interface
-│   │   ├── professional.html      # ProfessionalBot interface
-│   │   ├── codegent.html          # CodeGent interface
+│   │   ├── professional.html      # ProfessionalBot (Luna) interface
+│   │   ├── codegent.html          # CodeGent coding assistant
+│   │   ├── codetest.html          # CodeTest distributed benchmarking dashboard
 │   │   ├── fitness.html           # FitnessBot interface
 │   │   ├── weatherfood.html       # WeatherFood interface
-│   │   └── zenmode.html           # ZenMode interface
+│   │   └── zenmode.html           # ZenMode meditation interface
 │   │
 │   ├── css/                       # Modular stylesheets
 │   └── js/                        # Agent-specific JavaScript
 │
+├── codetest/                      # Go/Kafka/Redis - Distributed benchmarking
+│   ├── cmd/
+│   │   ├── botload/               # Trading bot load generator
+│   │   ├── metrics/               # Metrics aggregator service
+│   │   ├── upload/                # File upload & execution service
+│   │   └── ws/                    # WebSocket metrics server
+│   │
+│   ├── internal/
+│   │   ├── bot/                   # Bot worker logic & Kafka producer
+│   │   ├── metrics/               # Aggregation & Redis sink
+│   │   ├── telemetry/             # Event definitions
+│   │   └── upload/                # Docker execution & container handling
+│   │
+│   ├── submissions/               # User code submissions (auto-organized by ID)
+│   ├── deploy/
+│   │   ├── docker/                # Dockerfiles for each service
+│   │   └── k8s/                   # Kubernetes manifests
+│   │
+│   ├── go.mod & go.sum            # Go dependencies
+│   ├── docker-compose.yml         # Local dev orchestration
+│   └── ARCHITECTURE.md            # CodeTest architecture docs
+│
+├── images/                        # Application images & assets
 ├── .env                           # Environment variables (not in repo)
 ├── .gitignore                     # Git ignore rules
+├── main.py                        # Entry point - starts Flask + CodeTest services
 ├── index.html                     # Landing page
 ├── style.css                      # Main stylesheet
 ├── README.md                      # This file
+├── DEPLOY_TO_RENDER.md            # Render deployment guide
 └── LANGGRAPH_IMPLEMENTATION.md    # LangGraph integration docs
 ```
 
@@ -699,6 +795,7 @@ This project is private and proprietary. All rights reserved.
 For issues, questions, or suggestions:
 
 - 📧 Email: udayeaswar24@gmail.com
+
 ---
 
 <div align="center">
