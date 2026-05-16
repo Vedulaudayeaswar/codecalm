@@ -5,6 +5,11 @@ import threading
 import json
 import base64
 import re
+import shutil
+import socket
+import subprocess
+import sys
+import atexit
 from datetime import datetime, timedelta
 import logging
 import traceback
@@ -65,6 +70,103 @@ app.register_blueprint(chat_bp)  # /api/chat/*
 logger.info("✅ Database initialized with PostgreSQL")
 logger.info("✅ Authentication routes registered at /api/auth")
 logger.info("✅ Chat routes registered at /api/chat")
+
+# =================================================================================
+# CODETEST DEV SERVICE ORCHESTRATION
+# =================================================================================
+
+CODETEST_PROCESSES = []
+
+def _project_root():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+def _codetest_root():
+    return os.path.join(_project_root(), 'codetest')
+
+def _is_port_open(port):
+    try:
+        with socket.create_connection(('127.0.0.1', port), timeout=0.5):
+            return True
+    except OSError:
+        return False
+
+def _start_codetest_service(name, cmd, port, extra_env=None):
+    """Start one Go service for local CodeTest development."""
+    if _is_port_open(port):
+        logger.info(f"✅ CodeTest {name} already running on port {port}")
+        return
+
+    codetest_dir = _codetest_root()
+    if not os.path.exists(os.path.join(codetest_dir, 'go.mod')):
+        logger.warning("⚠️ CodeTest module not found; skipping service autostart")
+        return
+
+    go_bin = shutil.which('go')
+    if not go_bin:
+        logger.warning("⚠️ Go is not installed; CodeTest services were not started")
+        return
+
+    env = os.environ.copy()
+    env.update(extra_env or {})
+    env.setdefault('GOCACHE', os.path.join(_project_root(), '.gocache'))
+    env.setdefault('GOMODCACHE', os.path.join(_project_root(), '.gomodcache'))
+    os.makedirs(env['GOCACHE'], exist_ok=True)
+    os.makedirs(env['GOMODCACHE'], exist_ok=True)
+
+    try:
+        process = subprocess.Popen(
+            [go_bin, 'run', cmd],
+            cwd=codetest_dir,
+            env=env,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW if sys.platform.startswith('win') else 0
+        )
+        CODETEST_PROCESSES.append((name, process, port))
+        logger.info(f"✅ Starting CodeTest {name} on port {port}")
+    except Exception as e:
+        logger.warning(f"⚠️ Could not start CodeTest {name}: {e}")
+
+def start_codetest_services():
+    """Autostart CodeTest services when running `python main.py`.
+
+    Set CODETEST_AUTOSTART=false to disable. Docker is needed for uploads;
+    Redis and Kafka are needed for real live telemetry.
+    """
+    if os.getenv('CODETEST_AUTOSTART', 'true').lower() == 'false':
+        logger.info("ℹ️ CodeTest autostart disabled")
+        return
+
+    _start_codetest_service('upload API', './cmd/upload', 8081, {
+        'PORT': '8081',
+        'SUBMISSIONS_DIR': os.path.join(_codetest_root(), 'submissions'),
+    })
+    _start_codetest_service('botload API', './cmd/botload', 8082, {
+        'PORT': '8082',
+        'BOTLOAD_MODE': 'server',
+        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:9092'),
+        'KAFKA_TOPIC': os.getenv('KAFKA_TOPIC', 'bot-events'),
+        'TARGET_URL': os.getenv('TARGET_URL', 'http://localhost:8080/orders'),
+    })
+    _start_codetest_service('WebSocket metrics API', './cmd/ws', 8084, {
+        'PORT': '8084',
+        'REDIS_ADDR': os.getenv('REDIS_ADDR', 'localhost:6379'),
+        'REDIS_CHANNEL': os.getenv('REDIS_CHANNEL', 'codetest.metrics'),
+    })
+    _start_codetest_service('metrics aggregator', './cmd/metrics', 8085, {
+        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:9092'),
+        'KAFKA_TOPIC': os.getenv('KAFKA_TOPIC', 'bot-events'),
+        'REDIS_ADDR': os.getenv('REDIS_ADDR', 'localhost:6379'),
+        'REDIS_CHANNEL': os.getenv('REDIS_CHANNEL', 'codetest.metrics'),
+    })
+
+def stop_codetest_services():
+    for name, process, _ in CODETEST_PROCESSES:
+        if process.poll() is None:
+            logger.info(f"Stopping CodeTest {name}")
+            process.terminate()
+
+atexit.register(stop_codetest_services)
 
 # =================================================================================
 # DUAL AI SETUP: GROQ (CLOUD) + OLLAMA (LOCAL)
@@ -1011,6 +1113,43 @@ def health_check():
         },
         'services': ['student', 'parent', 'professional'],
         'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/api/codetest/status', methods=['GET'])
+def codetest_status():
+    """Report local CodeTest service/dependency status for one-command dev runs."""
+    return jsonify({
+        'success': True,
+        'services': {
+            'upload_api': {
+                'url': 'http://localhost:8081',
+                'running': _is_port_open(8081)
+            },
+            'botload_api': {
+                'url': 'http://localhost:8082',
+                'running': _is_port_open(8082)
+            },
+            'websocket_api': {
+                'url': 'ws://localhost:8084/ws/metrics',
+                'running': _is_port_open(8084)
+            },
+            'metrics_aggregator': {
+                'running': any(
+                    name == 'metrics aggregator' and process.poll() is None
+                    for name, process, _ in CODETEST_PROCESSES
+                )
+            }
+        },
+        'dependencies': {
+            'go': shutil.which('go') is not None,
+            'docker': shutil.which('docker') is not None,
+            'redis': _is_port_open(6379),
+            'kafka': _is_port_open(9092)
+        },
+        'notes': [
+            'Docker is required for uploaded code execution.',
+            'Redis and Kafka are required for real-time bot telemetry metrics.'
+        ]
     })
 
 @app.route('/api/conversation-history/<service>', methods=['GET'])
@@ -2369,6 +2508,10 @@ if __name__ == '__main__':
     logger.info(f"🏠 ParentBot (Parent Assistant) - Using Groq {GROQ_MODEL}")
     logger.info(f"💼 Luna (Professional Wellness) - Using Groq {GROQ_MODEL}")
     logger.info("🤖 CodeGent (Coding Tutor) - Using OpenRouter API")
+    logger.info("=" * 60)
+    start_codetest_services()
+    logger.info("🧪 CodeTest dashboard: http://localhost:5000/frontend/html/codetest.html")
+    logger.info("🧪 CodeTest status: http://localhost:5000/api/codetest/status")
     logger.info("=" * 60)
     logger.info(f"🌐 Server running on http://localhost:{port}")
     logger.info("✅ Ready for connections!")

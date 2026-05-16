@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics
+  namespace: codetest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrics
+  template:
+    metadata:
+      labels:
+        app: metrics
+    spec:
+      containers:
+        - name: metrics
+          image: codecalm/codetest-metrics:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: codetest-config
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket
+  namespace: codetest
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: websocket
+  template:
+    metadata:
+      labels:
+        app: websocket
+    spec:
+      containers:
+        - name: websocket
+          image: codecalm/codetest-ws:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8084
+          envFrom:
+            - configMapRef:
+                name: codetest-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket
+  namespace: codetest
+spec:
+  selector:
+    app: websocket
+  ports:
+    - port: 8084
+      targetPort: 8084
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: botload
+  namespace: codetest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: botload
+  template:
+    metadata:
+      labels:
+        app: botload
+    spec:
+      containers:
+        - name: botload
+          image: codecalm/codetest-botload:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: codetest-config
+          env:
+            - name: BOT_COUNT
+              value: "1000"
+            - name: DURATION
+              value: "60s"
+            - name: BOTLOAD_MODE
+              value: "server"
+            - name: PORT
+              value: "8082"
+          ports:
+            - containerPort: 8082
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: botload
+  namespace: codetest
+spec:
+  selector:
+    app: botload
+  ports:
+    - port: 8082
+      targetPort: 8082

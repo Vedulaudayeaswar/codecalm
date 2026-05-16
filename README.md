@@ -16,6 +16,183 @@
 
 ---
 
+## CodeTest Distributed Benchmarking Platform
+
+CodeCalm now includes **CodeTest**, a distributed benchmarking dashboard connected from the CodeGent page. CodeGent remains the Socratic coding tutor, and CodeTest adds a separate load-testing workflow for uploaded code and simulated trading-bot stress tests.
+
+Open it from:
+
+```text
+CodeGent -> CodeTest
+```
+
+Direct local URL after running the app:
+
+```text
+http://localhost:5000/frontend/html/codetest.html
+```
+
+### What CodeTest Does
+
+| Feature | Description |
+| --- | --- |
+| Code upload | Accepts `.py`, `.cpp`, and `.go` source files through `POST /upload` |
+| Language detection | Detects Python, C++, or Go from file extension |
+| Docker execution | Generates a Dockerfile, builds an image, and runs code with memory and CPU limits |
+| Bot load generation | Simulates high-concurrency trading bots with BUY, SELL, and CANCEL orders |
+| Kafka telemetry | Bot workers publish benchmark events to Kafka |
+| Metrics aggregation | Consumes Kafka events and calculates TPS, p50, p90, p99, failures, and error rate |
+| Redis live state | Stores live metrics and publishes real-time updates with Redis pub/sub |
+| WebSocket dashboard | Broadcasts live JSON metrics to the frontend dashboard |
+| Deployment artifacts | Includes Dockerfiles, Docker Compose, and Kubernetes manifests |
+
+### CodeTest Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Existing app backend | Python, Flask, SQLAlchemy |
+| CodeTest services | Go |
+| Upload API | Gin |
+| WebSocket server | Gorilla WebSocket |
+| Event streaming | Kafka |
+| Live metrics cache | Redis / Render Key Value compatible Redis |
+| Container execution | Docker |
+| Local orchestration | Docker Compose |
+| Cluster orchestration | Kubernetes |
+| Frontend dashboard | HTML, CSS, JavaScript, Canvas charts |
+
+### CodeTest Architecture
+
+```mermaid
+flowchart LR
+    A[CodeGent Page] --> B[CodeTest Dashboard]
+    B --> C[Upload API - Gin]
+    C --> D[Submission Folder]
+    D --> E[Generated Dockerfile]
+    E --> F[Docker Build]
+    F --> G[Limited Container Run]
+    G --> H[Execution Logs]
+    H --> B
+
+    B --> I[Botload API]
+    I --> J[Trading Bot Worker Pool]
+    J --> K[Kafka bot-events Topic]
+    K --> L[Metrics Aggregator]
+    L --> M[Redis Live Metrics]
+    M --> N[Redis Pub/Sub]
+    N --> O[WebSocket Server]
+    O --> B
+```
+
+### Benchmark Data Flow
+
+```mermaid
+sequenceDiagram
+    participant UI as CodeTest Dashboard
+    participant Bot as Botload Service
+    participant Kafka as Kafka
+    participant Metrics as Metrics Aggregator
+    participant Redis as Redis
+    participant WS as WebSocket Server
+
+    UI->>Bot: POST /benchmark/start
+    Bot->>Bot: Start goroutine worker pool
+    Bot->>Kafka: Publish BUY/SELL/CANCEL telemetry
+    Kafka->>Metrics: Consume bot-events
+    Metrics->>Metrics: Calculate TPS, p50, p90, p99, error rate
+    Metrics->>Redis: Store latest metrics
+    Metrics->>Redis: Publish metrics update
+    Redis->>WS: Pub/Sub message
+    WS->>UI: JSON metrics update
+```
+
+### One-Command Development Run
+
+From the project root:
+
+```bash
+python main.py
+```
+
+This starts the normal Flask app and attempts to autostart CodeTest Go services:
+
+| Service | URL |
+| --- | --- |
+| CodeCalm app | `http://localhost:5000` |
+| CodeTest dashboard | `http://localhost:5000/frontend/html/codetest.html` |
+| CodeTest status | `http://localhost:5000/api/codetest/status` |
+| Upload API | `http://localhost:8081` |
+| Botload API | `http://localhost:8082` |
+| Metrics WebSocket | `ws://localhost:8084/ws/metrics` |
+
+Check this endpoint after startup:
+
+```text
+http://localhost:5000/api/codetest/status
+```
+
+It reports whether Go, Docker, Redis, Kafka, and the CodeTest services are available.
+
+### Full Local Benchmark Run
+
+For the complete distributed benchmark stack, install Docker Desktop and run:
+
+```bash
+cd codetest
+docker compose up --build redis kafka upload metrics ws
+```
+
+Then start the botload service:
+
+```bash
+docker compose --profile load up --build botload
+```
+
+The dashboard can then receive live metrics through Redis pub/sub and WebSocket updates.
+
+### Deployment Workflow
+
+```mermaid
+flowchart TD
+    A[Push Code to GitHub] --> B[Render Auto Deploys CodeCalm Flask App]
+    B --> C[CodeGent and CodeTest UI Available]
+    C --> D{Need Full Benchmark Stack?}
+    D -->|No| E[Use Render Web App Only]
+    D -->|Yes| F[Deploy CodeTest Services Separately]
+    F --> G[Docker Compose on VPS or Kubernetes Cluster]
+    F --> H[Managed Redis / Render Key Value]
+    F --> I[Managed Kafka or Kafka Cluster]
+    G --> J[Expose Upload, Botload, and WebSocket URLs]
+    H --> J
+    I --> J
+    J --> K[Set Frontend/API Environment URLs]
+```
+
+### GitHub + Render Rehost Checklist
+
+| Step | What to do | Notes |
+| --- | --- | --- |
+| 1 | Push the updated repo to GitHub | Include `main.py`, `backend/`, `frontend/`, and `codetest/` |
+| 2 | Create or reconnect a Render Web Service | Use the existing Flask deployment style |
+| 3 | Set build command | `pip install -r backend/requirements.txt` |
+| 4 | Set start command | `gunicorn --chdir backend --bind 0.0.0.0:$PORT main:app --workers 2 --timeout 120` |
+| 5 | Add environment variables | `GROQ_API_KEY`, `OPENROUTER_API_KEY`, `DATABASE_URL`, `FLASK_SECRET_KEY`, etc. |
+| 6 | Set `CODETEST_AUTOSTART=false` on Render | Render web services should not try to launch local Go helper processes |
+| 7 | Deploy | CodeCalm, CodeGent, and the CodeTest dashboard UI will be hosted |
+| 8 | Deploy full CodeTest stack separately if needed | Use Docker Compose on a VPS or Kubernetes manifests under `codetest/deploy/k8s` |
+| 9 | Connect Redis/Kafka | Use managed services or your Kubernetes services |
+| 10 | Point the dashboard at live CodeTest APIs | Update API URLs if they are not on the same host |
+
+Render is still good for the main CodeCalm web app. The full CodeTest benchmark system is heavier because it needs Docker-based code execution, Kafka, Redis, and long-running Go services. For production benchmarking, deploy CodeTest on Kubernetes or a VPS where Docker/Kafka/Redis are first-class services.
+
+Useful Render docs:
+
+- Docker services: <https://render.com/docs/docker>
+- Key Value / Redis-compatible service: <https://render.com/docs/key-value>
+- Health checks: <https://render.com/docs/health-checks>
+
+---
+
 ## 📋 Overview
 
 **CodeCalm** is a comprehensive mental wellness platform that leverages cutting-edge AI technology to provide personalized support across multiple life domains. Built with LangGraph for advanced agent orchestration and powered by state-of-the-art language models (Llama 3.3 70B, Claude, GPT-4), it offers empathetic, context-aware conversations tailored to your specific needs.

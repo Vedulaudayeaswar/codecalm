@@ -130,6 +130,9 @@ node_modules/
 *.temp
 *.bak
 *.swp
+codetest/submissions/
+.gocache/
+.gomodcache/
 
 # Windows
 bash.exe.stackdump

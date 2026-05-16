@@ -1,0 +1,13 @@
+FROM golang:1.22-alpine AS build
+WORKDIR /src
+COPY go.mod go.sum* ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -o /out/botload ./cmd/botload
+
+FROM alpine:3.20
+WORKDIR /app
+COPY --from=build /out/botload /app/botload
+ENV BOTLOAD_MODE=server PORT=8082 BOT_COUNT=100 DURATION=30s KAFKA_BROKERS=kafka:9092 KAFKA_TOPIC=bot-events
+EXPOSE 8082
+CMD ["/app/botload"]

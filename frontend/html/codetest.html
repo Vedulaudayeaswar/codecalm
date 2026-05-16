@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeTest - Distributed Benchmarking | CodeCalm</title>
+    <link rel="stylesheet" href="../css/codetest.css" />
+  </head>
+  <body>
+    <main class="dashboard-shell">
+      <aside class="side-rail">
+        <div class="brand-block">
+          <span class="brand-mark">CT</span>
+          <div>
+            <h1>CodeTest</h1>
+            <p>Distributed benchmark control</p>
+          </div>
+        </div>
+
+        <nav class="nav-stack" aria-label="CodeTest sections">
+          <a class="nav-item active" href="#live">Live Metrics</a>
+          <a class="nav-item" href="#submit">Submissions</a>
+          <a class="nav-item" href="#leaderboard">Leaderboard</a>
+        </nav>
+
+        <button class="ghost-button" onclick="window.location.href='codegent.html'">
+          Back to CodeGent
+        </button>
+      </aside>
+
+      <section class="main-panel">
+        <header class="top-bar">
+          <div>
+            <p class="eyebrow">Benchmarking Platform</p>
+            <h2>Trading bot stress dashboard</h2>
+          </div>
+          <div class="connection-pill" id="connection-status">Connecting</div>
+        </header>
+
+        <section class="metric-grid" id="live">
+          <article class="metric-tile"><span>TPS</span><strong id="metric-tps">0</strong></article>
+          <article class="metric-tile"><span>p50 latency</span><strong><span id="metric-p50">0</span> ms</strong></article>
+          <article class="metric-tile"><span>p99 latency</span><strong><span id="metric-p99">0</span> ms</strong></article>
+          <article class="metric-tile"><span>Active bots</span><strong id="metric-bots">0</strong></article>
+          <article class="metric-tile danger"><span>Failures</span><strong id="metric-failures">0</strong></article>
+        </section>
+
+        <section class="workbench">
+          <article class="chart-panel">
+            <div class="section-head">
+              <h3>Live Throughput</h3>
+              <span id="last-update">Waiting for metrics</span>
+            </div>
+            <canvas id="tps-chart" width="900" height="280"></canvas>
+          </article>
+
+          <article class="terminal-panel">
+            <div class="section-head">
+              <h3>Execution Logs</h3>
+              <span id="submission-id">No submission</span>
+            </div>
+            <pre id="log-output">Upload Python, C++, or Go code to build and run it in a limited Docker container.</pre>
+          </article>
+        </section>
+
+        <section class="action-row" id="submit">
+          <form class="upload-panel" id="upload-form">
+            <label for="code-file">Code submission</label>
+            <div class="file-row">
+              <input id="code-file" name="file" type="file" accept=".py,.cpp,.cc,.cxx,.go" />
+              <button type="submit">Upload Code</button>
+            </div>
+          </form>
+
+          <form class="benchmark-panel" id="benchmark-form">
+            <label for="bot-count">Bot count</label>
+            <div class="control-row">
+              <input id="bot-count" type="number" min="1" value="100" />
+              <button type="submit">Start Benchmark</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="leaderboard" id="leaderboard">
+          <div class="section-head">
+            <h3>Leaderboard</h3>
+            <span>Fastest recent submissions</span>
+          </div>
+          <div class="leaderboard-list" id="leaderboard-list">
+            <div class="leaderboard-row"><span>Waiting for runs</span><strong>--</strong></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/codetest.js"></script>
+  </body>
+</html>

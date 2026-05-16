@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codetest-config
+  namespace: codetest
+data:
+  KAFKA_BROKERS: "kafka:9092"
+  KAFKA_TOPIC: "bot-events"
+  REDIS_ADDR: "redis:6379"
+  REDIS_CHANNEL: "codetest.metrics"
+  TARGET_URL: "http://trading-api.default.svc.cluster.local/orders"
