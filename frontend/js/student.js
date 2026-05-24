@@ -162,11 +162,11 @@ function init3DRobot() {
     0,
     Math.PI,
     false,
-    0
+    0,
   );
   const upperLipPoints = upperLipCurve.getPoints(30);
   const upperLipGeometry = new THREE.BufferGeometry().setFromPoints(
-    upperLipPoints
+    upperLipPoints,
   );
   const lipMaterial = new THREE.LineBasicMaterial({
     color: 0x764ba2,
@@ -186,11 +186,11 @@ function init3DRobot() {
     Math.PI,
     2 * Math.PI,
     false,
-    0
+    0,
   );
   const lowerLipPoints = lowerLipCurve.getPoints(30);
   const lowerLipGeometry = new THREE.BufferGeometry().setFromPoints(
-    lowerLipPoints
+    lowerLipPoints,
   );
   lowerLip = new THREE.Line(lowerLipGeometry, lipMaterial);
   lowerLip.position.set(0, -0.08, 0);
@@ -462,7 +462,7 @@ function setRobotHappy() {
         robot.scale.set(
           1 + progress * 0.2,
           1 + progress * 0.2,
-          1 + progress * 0.2
+          1 + progress * 0.2,
         );
 
         // Excited arms up (like "I got it!")
@@ -492,7 +492,7 @@ function setRobotHappy() {
         robot.scale.set(
           1 + reverseProgress * 0.2,
           1 + reverseProgress * 0.2,
-          1 + reverseProgress * 0.2
+          1 + reverseProgress * 0.2,
         );
 
         if (leftArm && rightArm) {
@@ -554,7 +554,7 @@ function setRobotSad() {
       robot.scale.set(
         1 - progress * 0.1,
         1 - progress * 0.1,
-        1 - progress * 0.1
+        1 - progress * 0.1,
       );
 
       // Head drops (discouraged)
@@ -795,12 +795,12 @@ function initVoiceSystem() {
     if (event.error === "network") {
       addMessage(
         "🎤 Voice recognition needs internet connection. You can still type your message!",
-        false
+        false,
       );
     } else if (event.error === "not-allowed") {
       addMessage(
         "🎤 Please allow microphone access in your browser settings to use voice input.",
-        false
+        false,
       );
     } else if (event.error === "no-speech") {
       addMessage("🎤 I didn't hear anything. Try speaking again!", false);
@@ -916,7 +916,7 @@ function speakResponse(text) {
     const femaleVoice = voices.find(
       (v) =>
         v.name.toLowerCase().includes("female") ||
-        v.name.toLowerCase().includes("girl")
+        v.name.toLowerCase().includes("girl"),
     );
     if (femaleVoice) utterance.voice = femaleVoice;
   }
@@ -1178,7 +1178,7 @@ function speakResponse(text) {
       voice.name.includes("Karen") ||
       voice.name.includes("Victoria") ||
       (voice.lang.startsWith("en") &&
-        voice.name.toLowerCase().includes("female"))
+        voice.name.toLowerCase().includes("female")),
   );
 
   if (cuteVoices.length > 0) {
@@ -1223,7 +1223,7 @@ async function initConversation() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: "Student" }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -1236,12 +1236,12 @@ async function initConversation() {
   } catch (error) {
     console.error("⚠️ Backend not available, using offline mode:", error);
     addMessage(
-      "Hi! I'm Maya, your study companion! 📚 (Note: Backend AI not connected - please start the server)"
+      "Hi! I'm Maya, your study companion! 📚 (Note: Backend AI not connected - please start the server)",
     );
   }
 }
 
-// Bot responses - NOW USES BACKEND AI (Ollama/Gemini)
+// Bot responses - NOW USES BACKEND AI (Groq)
 async function getBotResponse(userMessage) {
   setRobotThinking();
 
@@ -1262,7 +1262,7 @@ async function getBotResponse(userMessage) {
       setRobotHappy();
       console.log(
         "🤖 Maya AI Response:",
-        data.response.substring(0, 50) + "..."
+        data.response.substring(0, 50) + "...",
       );
       return data.response;
     } else {

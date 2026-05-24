@@ -15,6 +15,7 @@ type Hub struct {
 	RedisAddr string
 	Password  string
 	Channel   string
+	Key       string
 	clients   map[*websocket.Conn]bool
 	register  chan *websocket.Conn
 	remove    chan *websocket.Conn
@@ -27,6 +28,7 @@ func NewHub(redisAddr, password, channel string) *Hub {
 		RedisAddr: redisAddr,
 		Password:  password,
 		Channel:   channel,
+		Key:       "codetest:live",
 		clients:   make(map[*websocket.Conn]bool),
 		register:  make(chan *websocket.Conn),
 		remove:    make(chan *websocket.Conn),
@@ -65,6 +67,7 @@ func (h *Hub) Handle(c *gin.Context) {
 		return
 	}
 	h.register <- conn
+	h.sendLatest(c.Request.Context(), conn)
 	go func() {
 		defer func() { h.remove <- conn }()
 		for {
@@ -73,6 +76,16 @@ func (h *Hub) Handle(c *gin.Context) {
 			}
 		}
 	}()
+}
+
+func (h *Hub) sendLatest(ctx context.Context, conn *websocket.Conn) {
+	client := redis.NewClient(&redis.Options{Addr: h.RedisAddr, Password: h.Password})
+	defer client.Close()
+
+	payload, err := client.Get(ctx, h.Key).Bytes()
+	if err == nil && len(payload) > 0 {
+		_ = conn.WriteMessage(websocket.TextMessage, payload)
+	}
 }
 
 func (h *Hub) redisLoop(ctx context.Context) {

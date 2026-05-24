@@ -105,7 +105,7 @@ function init3DRobot() {
     0,
     Math.PI,
     false,
-    0
+    0,
   );
   const smilePoints = smileCurve.getPoints(50);
   const smileGeometry = new THREE.BufferGeometry().setFromPoints(smilePoints);
@@ -286,7 +286,7 @@ function setRobotHappy() {
           robot.scale.set(
             1 + progress * 0.2,
             1 + progress * 0.2,
-            1 + progress * 0.2
+            1 + progress * 0.2,
           );
           robot.rotation.z = progress * 0.4;
 
@@ -303,7 +303,7 @@ function setRobotHappy() {
             heart.scale.set(
               0.5 * (1 + progress * 0.3),
               0.5 * (1 + progress * 0.3),
-              0.5 * (1 + progress * 0.3)
+              0.5 * (1 + progress * 0.3),
             );
           }
         } else {
@@ -311,7 +311,7 @@ function setRobotHappy() {
           robot.scale.set(
             1 + reverseProgress * 0.2,
             1 + reverseProgress * 0.2,
-            1 + reverseProgress * 0.2
+            1 + reverseProgress * 0.2,
           );
           robot.rotation.z = reverseProgress * 0.4;
 
@@ -326,7 +326,7 @@ function setRobotHappy() {
             heart.scale.set(
               0.5 * (1 + reverseProgress * 0.3),
               0.5 * (1 + reverseProgress * 0.3),
-              0.5 * (1 + reverseProgress * 0.3)
+              0.5 * (1 + reverseProgress * 0.3),
             );
           }
         }
@@ -369,7 +369,7 @@ function setRobotSad() {
       robot.scale.set(
         1 - progress * 0.1,
         1 - progress * 0.1,
-        1 - progress * 0.1
+        1 - progress * 0.1,
       );
       robot.position.y -= progress * 0.05;
 
@@ -659,7 +659,7 @@ function speakResponse(text) {
       voice.name.includes("Google US English") ||
       voice.name.includes("Microsoft Zira") ||
       voice.name.includes("Samantha") ||
-      (voice.lang.startsWith("en") && voice.name.includes("Female"))
+      (voice.lang.startsWith("en") && voice.name.includes("Female")),
   );
 
   if (preferredVoices.length > 0) {
@@ -708,7 +708,7 @@ async function initConversation() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: "Parent" }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -716,9 +716,8 @@ async function initConversation() {
       // Replace initial message with AI-generated welcome
       const firstMessage = document.querySelector(".bot-message");
       if (firstMessage) {
-        firstMessage.querySelector(
-          ".message-content"
-        ).innerHTML = `<p>${data.message}</p>`;
+        firstMessage.querySelector(".message-content").innerHTML =
+          `<p>${data.message}</p>`;
       }
       conversationStarted = true;
       console.log("✅ Connected to ParentBot AI backend");
@@ -728,7 +727,7 @@ async function initConversation() {
   }
 }
 
-// Bot responses - NOW USES BACKEND AI (Ollama/Gemini)
+// Bot responses - NOW USES BACKEND AI (Groq)
 async function getBotResponse(userMessage) {
   showTyping();
 
@@ -759,7 +758,7 @@ async function getBotResponse(userMessage) {
     console.error("❌ Backend error:", error);
 
     // Fallback response if backend is down
-    return "I'm having trouble connecting to my AI brain right now. 🤗\n\nPlease make sure the backend server is running:\n\n```bash\ncd backend\npython main.py\n```\n\nOr check if Ollama/Gemini is configured properly. What would you like help with?";
+    return "I'm having trouble connecting to my AI brain right now. 🤗\n\nPlease make sure the backend server is running:\n\n```bash\ncd backend\npython main.py\n```\n\nAlso check that GROQ_API_KEY is set correctly in backend/.env. What would you like help with?";
   }
 }
 

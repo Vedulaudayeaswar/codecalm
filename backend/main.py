@@ -24,7 +24,13 @@ CORS(app, origins=["*"])
 
 # Load environment variables
 from dotenv import load_dotenv
-load_dotenv(override=True)  # Reload to get latest API key
+
+# Load env from both project root and backend directory.
+# backend/.env intentionally overrides root .env when both exist.
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..'))
+load_dotenv(os.path.join(PROJECT_ROOT, '.env'), override=False)
+load_dotenv(os.path.join(CURRENT_DIR, '.env'), override=True)
 
 # =================================================================================
 # DATABASE SETUP
@@ -90,6 +96,13 @@ def _is_port_open(port):
     except OSError:
         return False
 
+def _docker_available():
+    if shutil.which('docker') is not None:
+        return True
+    if sys.platform.startswith('win'):
+        return os.path.exists(r'C:\Program Files\Docker\Docker\resources\bin\docker.exe')
+    return False
+
 def _start_codetest_service(name, cmd, port, extra_env=None):
     """Start one Go service for local CodeTest development."""
     if _is_port_open(port):
@@ -118,8 +131,8 @@ def _start_codetest_service(name, cmd, port, extra_env=None):
             [go_bin, 'run', cmd],
             cwd=codetest_dir,
             env=env,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=None,
+            stderr=None,
             creationflags=subprocess.CREATE_NO_WINDOW if sys.platform.startswith('win') else 0
         )
         CODETEST_PROCESSES.append((name, process, port))
@@ -144,9 +157,9 @@ def start_codetest_services():
     _start_codetest_service('botload API', './cmd/botload', 8082, {
         'PORT': '8082',
         'BOTLOAD_MODE': 'server',
-        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:9092'),
+        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:29092'),
         'KAFKA_TOPIC': os.getenv('KAFKA_TOPIC', 'bot-events'),
-        'TARGET_URL': os.getenv('TARGET_URL', 'http://localhost:8080/orders'),
+        'TARGET_URL': os.getenv('TARGET_URL', 'http://localhost:5000/api/codetest/mock-order'),
     })
     _start_codetest_service('WebSocket metrics API', './cmd/ws', 8084, {
         'PORT': '8084',
@@ -154,7 +167,7 @@ def start_codetest_services():
         'REDIS_CHANNEL': os.getenv('REDIS_CHANNEL', 'codetest.metrics'),
     })
     _start_codetest_service('metrics aggregator', './cmd/metrics', 8085, {
-        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:9092'),
+        'KAFKA_BROKERS': os.getenv('KAFKA_BROKERS', 'localhost:29092'),
         'KAFKA_TOPIC': os.getenv('KAFKA_TOPIC', 'bot-events'),
         'REDIS_ADDR': os.getenv('REDIS_ADDR', 'localhost:6379'),
         'REDIS_CHANNEL': os.getenv('REDIS_CHANNEL', 'codetest.metrics'),
@@ -175,9 +188,9 @@ atexit.register(stop_codetest_services)
 import requests
 
 # Groq API Setup
-GROQ_API_KEY = os.getenv('GROQ_API_KEY')
-groq_available = False
-GROQ_MODEL = "llama-3.3-70b-versatile"  # Groq's Llama 70b model
+GROQ_API_KEY = os.getenv('GROQ_API_KEY') or os.getenv('GROQ_API')
+groq_available = bool(GROQ_API_KEY)
+GROQ_MODEL = os.getenv('GROQ_MODEL', "llama-3.3-70b-versatile")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 if GROQ_API_KEY:
@@ -201,14 +214,18 @@ if GROQ_API_KEY:
             groq_available = True
             logger.info(f"✅ Groq API configured with model: {GROQ_MODEL}")
         else:
-            logger.warning(f"⚠️  Groq API test failed: {test_response.status_code}")
-            groq_available = False
+            # Keep runtime attempts enabled even if startup probe fails once.
+            logger.warning(
+                f"⚠️  Groq startup probe failed ({test_response.status_code}); "
+                "will retry on live requests"
+            )
+            groq_available = bool(GROQ_API_KEY)
             
     except Exception as e:
-        logger.warning(f"⚠️  Groq API setup failed: {e}")
-        groq_available = False
+        logger.warning(f"⚠️  Groq startup probe failed: {e}; will retry on live requests")
+        groq_available = bool(GROQ_API_KEY)
 else:
-    logger.warning("⚠️  GROQ_API_KEY not found in .env file")
+    logger.warning("⚠️  GROQ_API_KEY (or GROQ_API) not found in .env file")
 
 # Ollama Setup (Local)
 OLLAMA_BASE_URL = "http://localhost:11434"
@@ -262,8 +279,10 @@ def generate_with_ollama(prompt, temperature=0.7, max_tokens=500):
 
 def generate_with_groq(prompt, temperature=0.7, max_tokens=500):
     """Generate response using Groq Llama 70b API"""
+    global groq_available
     try:
         if not GROQ_API_KEY:
+            groq_available = False
             return None
             
         response = requests.post(
@@ -283,9 +302,12 @@ def generate_with_groq(prompt, temperature=0.7, max_tokens=500):
         
         if response.status_code == 200:
             result = response.json()
+            groq_available = True
             return result['choices'][0]['message']['content'].strip()
         else:
             logger.error(f"Groq API error: {response.status_code} - {response.text}")
+            if response.status_code in (401, 403):
+                groq_available = False
             return None
         
     except Exception as e:
@@ -297,11 +319,10 @@ def generate_ai_response(prompt, temperature=0.7, max_tokens=500):
     Generate AI response using Groq Llama 70b API for Student, Parent, and Professional bots
     """
     # Use Groq API directly (no Ollama)
-    if groq_available:
-        logger.info("☁️  Using Groq Llama 70b (Cloud API)")
-        response = generate_with_groq(prompt, temperature, max_tokens)
-        if response:
-            return response
+    logger.info("☁️  Using Groq Llama 70b (Cloud API)")
+    response = generate_with_groq(prompt, temperature, max_tokens)
+    if response:
+        return response
     
     # No AI available
     logger.error("❌ Groq API not available - check GROQ_API_KEY in .env")
@@ -317,7 +338,7 @@ else:
     logger.warning("⚠️  Groq API not available - check GROQ_API_KEY in .env")
 
 # Set model flag for health checks
-model = groq_available
+model = bool(GROQ_API_KEY)
 
 if not model:
     logger.error("❌ GROQ API NOT AVAILABLE! Add GROQ_API_KEY to .env")
@@ -840,6 +861,12 @@ def serve_fitness():
     root_dir = os.path.join(os.path.dirname(__file__), '..')
     return send_from_directory(root_dir, 'fitness.png')
 
+@app.route('/video.mp4')
+def serve_background_video():
+    """Serve root background video for CodeTest dashboard."""
+    root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    return send_from_directory(root_dir, 'video.mp4', mimetype='video/mp4')
+
 @app.route('/frontend/html/<path:filename>')
 def serve_html(filename):
     """Serve HTML files"""
@@ -1142,7 +1169,7 @@ def codetest_status():
         },
         'dependencies': {
             'go': shutil.which('go') is not None,
-            'docker': shutil.which('docker') is not None,
+            'docker': _docker_available(),
             'redis': _is_port_open(6379),
             'kafka': _is_port_open(9092)
         },
@@ -1150,6 +1177,18 @@ def codetest_status():
             'Docker is required for uploaded code execution.',
             'Redis and Kafka are required for real-time bot telemetry metrics.'
         ]
+    })
+
+@app.route('/api/codetest/mock-order', methods=['POST'])
+def codetest_mock_order():
+    """Lightweight trading-order target for local benchmark smoke tests."""
+    data = request.get_json(silent=True) or {}
+    return jsonify({
+        'success': True,
+        'accepted': True,
+        'orderType': data.get('orderType', 'UNKNOWN'),
+        'symbol': data.get('symbol', 'UNKNOWN'),
+        'timestamp': datetime.now().isoformat()
     })
 
 @app.route('/api/conversation-history/<service>', methods=['GET'])
@@ -1185,8 +1224,6 @@ def get_conversation_history(service):
 # =================================================================================
 # CODEGENT - SOCRATIC CODING TUTOR WITH MULTI-LLM ROUTING
 # =================================================================================
-
-OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
 
 # Token tracking for analytics
 token_usage = {
@@ -1241,7 +1278,10 @@ def classify_query(user_message):
 
 def get_llm_response_openrouter(model_name, messages, conversation_state):
     """
-    Route to appropriate LLM via OpenRouter and get response.
+    Route CodeGent through Groq.
+
+    The UI still keeps Claude/GPT/Gemini routing buckets for analytics, but
+    the actual generation uses the single GROQ_API_KEY backend.
     Returns: tuple (response_text, tokens_used, reasoning)
     """
     
@@ -1278,64 +1318,29 @@ RESPONSE RULES:
 """
 
     try:
-        # Model mapping for OpenRouter (Updated with valid model IDs)
-        model_map = {
-            'claude': 'anthropic/claude-3.5-sonnet',
-            'gpt': 'openai/gpt-4-turbo',
-            'gemini': 'google/gemini-2.0-flash-exp'  # Updated to valid Gemini model
-        }
-        
-        openrouter_model = model_map.get(model_name, 'google/gemini-2.0-flash-exp')
-        
-        # Prepare messages for OpenRouter
         formatted_messages = [{"role": "system", "content": system_prompt}]
         for msg in messages:
             formatted_messages.append({
                 "role": msg['role'],
                 "content": msg['content']
             })
-        
-        # Call OpenRouter API
-        headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "http://localhost:5000",
-            "X-Title": "CodeCalm CodeGent"
-        }
-        
-        payload = {
-            "model": openrouter_model,
-            "messages": formatted_messages,
-            "max_tokens": 1500,
-            "temperature": 0.7
-        }
-        
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=60
-        )
-        
-        if response.status_code == 200:
-            data = response.json()
-            content = data['choices'][0]['message']['content']
-            tokens = data.get('usage', {}).get('total_tokens', 0)
-            
-            return content, tokens, f"Successfully used {model_name.upper()}"
-        else:
-            logger.error(f"OpenRouter API error: {response.status_code} - {response.text}")
-            # Fallback to Gemini
-            return fallback_to_gemini(formatted_messages)
+
+        prompt = "\n".join([f"{m['role']}: {m['content']}" for m in formatted_messages])
+        content = generate_with_groq(prompt, temperature=0.7, max_tokens=1500)
+        if content:
+            tokens = int((len(prompt.split()) + len(content.split())) * 1.3)
+            return content, tokens, f"Groq powered {model_name.upper()} route"
+
+        return ("Groq is unavailable. Please check GROQ_API_KEY in backend/.env and try again."), 0, "Groq unavailable"
             
     except Exception as e:
         logger.error(f"Error with {model_name}: {str(e)}")
-        return fallback_to_gemini(formatted_messages)
+        return fallback_to_gemini(formatted_messages if 'formatted_messages' in locals() else messages)
 
 def fallback_to_gemini(messages):
     """Fallback to Groq if OpenRouter fails"""
     try:
-        if groq_available:
+        if GROQ_API_KEY:
             # Convert messages to a single prompt for Groq
             prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
             response_text = generate_with_groq(prompt, temperature=0.7, max_tokens=1500)
@@ -2499,7 +2504,7 @@ if __name__ == '__main__':
     
     if groq_available:
         logger.info(f"☁️  Student/Parent/Professional Bots: Groq {GROQ_MODEL}")
-        logger.info("🤖 CodeGent: OpenRouter (Claude/GPT-4/Gemini)")
+        logger.info("🤖 CodeGent: Groq-powered routing")
     else:
         logger.error("❌ NO AI BACKEND AVAILABLE!")
         
@@ -2507,7 +2512,7 @@ if __name__ == '__main__':
     logger.info(f"💙 Maya (Student Support) - Using Groq {GROQ_MODEL}")
     logger.info(f"🏠 ParentBot (Parent Assistant) - Using Groq {GROQ_MODEL}")
     logger.info(f"💼 Luna (Professional Wellness) - Using Groq {GROQ_MODEL}")
-    logger.info("🤖 CodeGent (Coding Tutor) - Using OpenRouter API")
+    logger.info(f"🤖 CodeGent (Coding Tutor) - Using Groq {GROQ_MODEL}")
     logger.info("=" * 60)
     start_codetest_services()
     logger.info("🧪 CodeTest dashboard: http://localhost:5000/frontend/html/codetest.html")

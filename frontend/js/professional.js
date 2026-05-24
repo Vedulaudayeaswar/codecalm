@@ -147,7 +147,7 @@ function init3DRobot() {
     0,
     Math.PI,
     false,
-    0
+    0,
   );
   const smilePoints = smileCurve.getPoints(50);
   const smileGeometry = new THREE.BufferGeometry().setFromPoints(smilePoints);
@@ -400,7 +400,7 @@ function setRobotAdjustingTie() {
           smile.scale.set(
             1 + reverseProgress * 0.2,
             1 + reverseProgress * 0.2,
-            1
+            1,
           );
         }
       }
@@ -436,7 +436,7 @@ function setRobotHappy() {
         robot.scale.set(
           1 + progress * 0.15,
           1 + progress * 0.15,
-          1 + progress * 0.15
+          1 + progress * 0.15,
         );
 
         // Professional victory pose - arms slightly raised
@@ -461,7 +461,7 @@ function setRobotHappy() {
         robot.scale.set(
           1 + reverseProgress * 0.15,
           1 + reverseProgress * 0.15,
-          1 + reverseProgress * 0.15
+          1 + reverseProgress * 0.15,
         );
 
         if (leftArm && rightArm) {
@@ -516,7 +516,7 @@ function setRobotSad() {
       robot.scale.set(
         1 - progress * 0.08,
         1 - progress * 0.08,
-        1 - progress * 0.08
+        1 - progress * 0.08,
       );
 
       // Head drops down
@@ -834,7 +834,8 @@ function speakResponse(text) {
       voice.name.includes("Microsoft David") ||
       voice.name.includes("Alex") ||
       voice.name.includes("Daniel") ||
-      (voice.lang.startsWith("en") && voice.name.toLowerCase().includes("male"))
+      (voice.lang.startsWith("en") &&
+        voice.name.toLowerCase().includes("male")),
   );
 
   if (professionalVoices.length > 0) {
@@ -882,7 +883,7 @@ async function initConversation() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: "Professional" }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -895,12 +896,12 @@ async function initConversation() {
   } catch (error) {
     console.error("⚠️ Backend not available, using offline mode:", error);
     addMessage(
-      "Good day! I'm Luna, your professional wellness advisor. 💼 (Note: Backend AI not connected - please start the server)"
+      "Good day! I'm Luna, your professional wellness advisor. 💼 (Note: Backend AI not connected - please start the server)",
     );
   }
 }
 
-// Bot responses - NOW USES BACKEND AI (Ollama/Gemini)
+// Bot responses - NOW USES BACKEND AI (Groq)
 async function getBotResponse(userMessage) {
   showTyping();
   setRobotAdjustingTie(); // Signature professional gesture
@@ -923,7 +924,7 @@ async function getBotResponse(userMessage) {
       setRobotNeutral();
       console.log(
         "🤖 Luna AI Response:",
-        data.response.substring(0, 50) + "..."
+        data.response.substring(0, 50) + "...",
       );
       return data.response;
     } else {

@@ -1,39 +1,70 @@
 :root {
-  --bg: #090b10;
-  --panel: #111722;
-  --panel-strong: #172033;
-  --line: #273246;
-  --text: #f6f7fb;
-  --muted: #9aa7bd;
-  --green: #35d07f;
-  --cyan: #41d9ff;
-  --amber: #f7b955;
-  --red: #ff5f6d;
+  --black: #000;
+  --ink: #050606;
+  --panel: rgba(0, 0, 0, 0.68);
+  --panel-deep: rgba(0, 0, 0, 0.82);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hot: rgba(255, 255, 255, 0.16);
+  --text: #f7fff9;
+  --muted: rgba(247, 255, 249, 0.62);
+  --green: #00f5a0;
+  --cyan: #00d7ff;
+  --red: #ff4d4d;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background: var(--black);
   color: var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Rajdhani", Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  position: relative;
+}
+
+.background-video,
+.video-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.background-video {
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.7;
+  filter: brightness(1) saturate(1.2) contrast(1.15);
+}
+
+.video-overlay {
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .dashboard-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 284px 1fr;
+  background: rgba(0, 0, 0, 0.18);
+  position: relative;
+  z-index: 2;
 }
 
 .side-rail {
-  border-right: 1px solid var(--line);
-  background: #0d1119;
-  padding: 24px;
+  border-right: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.76);
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 30px;
+  box-shadow: 12px 0 40px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(18px);
 }
 
 .brand-block {
@@ -43,154 +74,317 @@ body {
 }
 
 .brand-mark {
-  width: 48px;
-  height: 48px;
-  border: 1px solid rgba(65, 217, 255, 0.55);
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
-  color: var(--cyan);
-  background: rgba(65, 217, 255, 0.08);
-  font-weight: 800;
+  color: #00100b;
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0 22px rgba(0, 245, 160, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  font-family: "Share Tech Mono", Consolas, monospace;
+  font-size: 18px;
 }
 
-.brand-block h1, .top-bar h2, .section-head h3 {
+.brand-block h1,
+.top-bar h2,
+.section-head h3 {
   margin: 0;
-  letter-spacing: 0;
 }
 
-.brand-block h1 { font-size: 22px; }
+.brand-block h1 {
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 
-.brand-block p, .eyebrow, .section-head span {
+.brand-block p,
+.eyebrow,
+.section-head span,
+label {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-.nav-stack { display: grid; gap: 8px; }
+.nav-stack {
+  display: grid;
+  gap: 10px;
+}
 
-.nav-item, .ghost-button, button {
-  min-height: 42px;
-  border: 1px solid var(--line);
+.nav-item,
+.ghost-button,
+button {
+  min-height: 44px;
+  border: 1px solid var(--border);
   color: var(--text);
-  background: var(--panel);
+  background: rgba(0, 0, 0, 0.55);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  font:
+    700 14px "Rajdhani",
+    sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  justify-content: flex-start;
+  padding: 0 16px;
+  border-left: 3px solid transparent;
 }
 
 .nav-item.active {
-  border-color: rgba(53, 208, 127, 0.5);
+  border-left-color: var(--green);
   color: var(--green);
+  box-shadow:
+    inset 14px 0 28px rgba(0, 245, 160, 0.08),
+    0 0 18px rgba(0, 245, 160, 0.08);
 }
 
-.ghost-button { margin-top: auto; }
+.ghost-button {
+  margin-top: auto;
+}
 
 .main-panel {
-  padding: 28px;
+  padding: 30px;
   display: grid;
   gap: 22px;
+  position: relative;
 }
 
-.top-bar, .section-head, .file-row, .control-row {
+.top-bar,
+.section-head,
+.file-row,
+.control-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.top-bar h2 { font-size: 30px; }
-
-.connection-pill {
-  border: 1px solid var(--amber);
-  color: var(--amber);
-  padding: 8px 12px;
-  min-width: 110px;
-  text-align: center;
+.top-bar h2 {
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-.connection-pill.online {
-  border-color: var(--green);
+.eyebrow {
   color: var(--green);
+}
+
+.connection-pill {
+  position: relative;
+  min-width: 118px;
+  padding: 9px 14px 9px 32px;
+  border: 1px solid rgba(0, 245, 160, 0.48);
+  color: var(--green);
+  background: rgba(0, 0, 0, 0.62);
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.18);
+  text-align: center;
+  font:
+    700 14px "Share Tech Mono",
+    monospace;
+  text-transform: uppercase;
+}
+
+.connection-pill::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 14px var(--green);
+  transform: translateY(-50%);
+  animation: livePulse 1.4s ease-in-out infinite;
+}
+
+.connection-pill:not(.online) {
+  color: rgba(255, 255, 255, 0.72);
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.connection-pill:not(.online)::before {
+  background: rgba(255, 255, 255, 0.38);
+  box-shadow: none;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(-50%) scale(0.78);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.18);
+  }
 }
 
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(130px, 1fr));
-  gap: 14px;
-}
-
-.metric-tile, .chart-panel, .terminal-panel, .upload-panel, .benchmark-panel, .leaderboard {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-
-.metric-tile { padding: 18px; }
-.metric-tile span { color: var(--muted); font-size: 13px; }
-.metric-tile strong { display: block; margin-top: 10px; font-size: 28px; }
-.metric-tile.danger strong { color: var(--red); }
-
-.workbench {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
   gap: 16px;
 }
 
-.chart-panel, .terminal-panel, .leaderboard { padding: 18px; }
+.metric-tile,
+.chart-panel,
+.terminal-panel,
+.upload-panel,
+.benchmark-panel,
+.leaderboard {
+  position: relative;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-top-color: var(--border-hot);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 42px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(18px);
+}
+
+.metric-tile::before,
+.chart-panel::before,
+.terminal-panel::before,
+.upload-panel::before,
+.benchmark-panel::before,
+.leaderboard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 245, 160, 0.72),
+    rgba(0, 215, 255, 0.48),
+    transparent
+  );
+}
+
+.metric-tile {
+  padding: 18px;
+}
+
+.metric-tile span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.metric-tile strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--text);
+  font:
+    400 32px "Share Tech Mono",
+    Consolas,
+    monospace;
+  letter-spacing: 0;
+  text-shadow: 0 0 20px rgba(0, 245, 160, 0.12);
+}
+
+.metric-tile.danger strong {
+  color: var(--red);
+  text-shadow: 0 0 18px rgba(255, 77, 77, 0.52);
+}
+
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
+  gap: 18px;
+}
+
+.chart-panel,
+.terminal-panel,
+.leaderboard,
+.upload-panel,
+.benchmark-panel {
+  padding: 20px;
+}
+
+.section-head h3 {
+  font-size: 22px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
 
 #tps-chart {
   width: 100%;
   height: 280px;
-  margin-top: 14px;
-  background: #0b0f17;
-  border: 1px solid #1d2636;
+  margin-top: 16px;
+  background: rgba(0, 0, 0, 0.68);
+  border: 1px solid var(--border);
 }
 
 #log-output {
   min-height: 280px;
   max-height: 280px;
   overflow: auto;
-  margin: 14px 0 0;
-  color: #b8ffe0;
+  margin: 16px 0 0;
+  color: #aaffdf;
   white-space: pre-wrap;
-  font-family: "Cascadia Mono", Consolas, monospace;
-  font-size: 13px;
+  font:
+    13px "Share Tech Mono",
+    Consolas,
+    monospace;
+  letter-spacing: 0;
 }
 
 .action-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 18px;
 }
-
-.upload-panel, .benchmark-panel { padding: 18px; }
 
 label {
   display: block;
   margin-bottom: 12px;
-  color: var(--muted);
-  font-size: 13px;
 }
 
 input {
   width: 100%;
-  min-height: 42px;
-  border: 1px solid var(--line);
-  background: var(--panel-strong);
+  min-height: 44px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.58);
   color: var(--text);
   padding: 8px 10px;
+  font:
+    14px "Share Tech Mono",
+    Consolas,
+    monospace;
 }
 
 button {
-  padding: 0 18px;
-  border-color: rgba(65, 217, 255, 0.45);
-  color: var(--cyan);
+  padding: 0 20px;
+  border-color: rgba(0, 245, 160, 0.38);
+  color: var(--green);
   white-space: nowrap;
+  box-shadow: 0 0 18px rgba(0, 245, 160, 0.08);
 }
 
-button:hover, .nav-item:hover, .ghost-button:hover { border-color: var(--cyan); }
+button:hover,
+.nav-item:hover,
+.ghost-button:hover {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 0 0 22px rgba(0, 245, 160, 0.18);
+}
 
 .leaderboard-list {
   display: grid;
@@ -201,13 +395,28 @@ button:hover, .nav-item:hover, .ghost-button:hover { border-color: var(--cyan); 
 .leaderboard-row {
   display: flex;
   justify-content: space-between;
-  border: 1px solid #202a3b;
-  background: #0c111a;
+  border: 1px solid var(--border);
+  background: var(--panel-deep);
   padding: 12px;
+  font-family: "Share Tech Mono", Consolas, monospace;
+  letter-spacing: 0;
+}
+
+@media (max-width: 1120px) {
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 980px) {
-  .dashboard-shell, .workbench, .action-row { grid-template-columns: 1fr; }
-  .side-rail { border-right: 0; border-bottom: 1px solid var(--line); }
-  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dashboard-shell,
+  .workbench,
+  .action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .side-rail {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
 }

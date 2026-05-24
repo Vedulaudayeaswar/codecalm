@@ -11,6 +11,7 @@ import (
 
 func main() {
 	hub := ws.NewHub(env("REDIS_ADDR", "localhost:6379"), env("REDIS_PASSWORD", ""), env("REDIS_CHANNEL", "codetest.metrics"))
+	hub.Key = env("REDIS_METRICS_KEY", "codetest:live")
 	go hub.Run(context.Background())
 
 	router := gin.Default()

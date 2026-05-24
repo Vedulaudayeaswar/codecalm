@@ -39,17 +39,17 @@ http://localhost:5000/frontend/html/codetest.html
 
 ### What CodeTest Does
 
-| Feature              | Description                                                                       |
-| -------------------- | --------------------------------------------------------------------------------- |
-| Code upload          | Accepts `.py`, `.cpp`, and `.go` source files through `POST /upload`              |
-| Language detection   | Detects Python, C++, or Go from file extension                                    |
-| Docker execution     | Generates a Dockerfile, builds an image, and runs code with memory and CPU limits |
-| Bot load generation  | Simulates high-concurrency trading bots with BUY, SELL, and CANCEL orders         |
-| Kafka telemetry      | Bot workers publish benchmark events to Kafka                                     |
-| Metrics aggregation  | Consumes Kafka events and calculates TPS, p50, p90, p99, failures, and error rate |
-| Redis live state     | Stores live metrics and publishes real-time updates with Redis pub/sub            |
-| WebSocket dashboard  | Broadcasts live JSON metrics to the frontend dashboard                            |
-| Deployment artifacts | Includes Dockerfiles, Docker Compose, and Kubernetes manifests                    |
+| Feature                            | Description                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------- |
+| Code upload                        | Accepts `.py`, `.cpp`, and `.go` source files through `POST /upload`              |
+| Language detection                 | Detects Python, C++, or Go from file extension                                    |
+| Container isolation                | Generates a Dockerfile, builds an image, and runs code with memory and CPU limits |
+| Concurrent load generation         | Simulates high-concurrency trading bots with BUY, SELL, and CANCEL orders         |
+| Event-driven telemetry             | Bot workers publish real-time benchmark events to Kafka                           |
+| Low-latency metrics pipeline       | Consumes Kafka events and calculates TPS, p50, p90, p99, failures, and error rate |
+| Real-time observability            | Stores live metrics and publishes real-time updates with Redis pub/sub            |
+| Distributed benchmarking           | Broadcasts live JSON metrics to the frontend dashboard with WebSocket             |
+| Horizontally scalable architecture | Includes Dockerfiles, Docker Compose, and Kubernetes manifests for scaling        |
 
 ### CodeTest Tech Stack
 
@@ -351,7 +351,6 @@ Create a `.env` file in the root directory:
 ```env
 # API Keys
 GROQ_API_KEY=your_groq_api_key_here
-OPENROUTER_API_KEY=your_openrouter_key_here  # Optional for multi-model access
 TAVILY_API_KEY=your_tavily_api_key_here  # For research paper search in FitnessBot
 
 # Database (PostgreSQL for production)

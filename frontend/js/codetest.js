@@ -52,10 +52,10 @@ function drawChart() {
   const width = chart.width;
   const height = chart.height;
   ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = "#0b0f17";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.76)";
   ctx.fillRect(0, 0, width, height);
 
-  ctx.strokeStyle = "#1e293b";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
   ctx.lineWidth = 1;
   for (let i = 1; i < 5; i++) {
     const y = (height / 5) * i;
@@ -66,16 +66,23 @@ function drawChart() {
   }
 
   const max = Math.max(...state.tps, 10);
-  ctx.strokeStyle = "#41d9ff";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  state.tps.forEach((value, index) => {
-    const x = (index / Math.max(state.tps.length - 1, 1)) * width;
-    const y = height - (value / max) * (height - 24) - 12;
-    if (index === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  const bars = state.tps.length ? state.tps : [0];
+  const gap = 8;
+  const barWidth = Math.max(8, (width - gap * (bars.length + 1)) / bars.length);
+  const gradient = ctx.createLinearGradient(0, 0, 0, height);
+  gradient.addColorStop(0, "#00f5a0");
+  gradient.addColorStop(1, "#00d7ff");
+
+  bars.forEach((value, index) => {
+    const barHeight = Math.max(4, (value / max) * (height - 34));
+    const x = gap + index * (barWidth + gap);
+    const y = height - barHeight - 14;
+    ctx.fillStyle = gradient;
+    ctx.shadowColor = "rgba(0, 245, 160, 0.45)";
+    ctx.shadowBlur = 16;
+    ctx.fillRect(x, y, barWidth, barHeight);
+    ctx.shadowBlur = 0;
   });
-  ctx.stroke();
 }
 
 document.getElementById("upload-form").addEventListener("submit", async (event) => {

@@ -33,7 +33,7 @@ function initChart() {
   tokenChart = new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: ["Claude (Coding)", "GPT-4 (Teaching)", "Gemini (General)"],
+      labels: ["Coding Route", "Teaching Route", "General Route"],
       datasets: [
         {
           data: [0, 0, 0],
@@ -105,9 +105,8 @@ function updateStats(tokenUsage) {
   document.getElementById("claude-queries").textContent = claudeData.queries;
   document.getElementById("claude-tokens").textContent =
     claudeData.tokens.toLocaleString();
-  document.getElementById(
-    "claude-bar"
-  ).style.width = `${claudeData.percentage}%`;
+  document.getElementById("claude-bar").style.width =
+    `${claudeData.percentage}%`;
 
   // Update GPT stats
   const gptData = distribution.gpt || { queries: 0, tokens: 0, percentage: 0 };
@@ -125,9 +124,8 @@ function updateStats(tokenUsage) {
   document.getElementById("gemini-queries").textContent = geminiData.queries;
   document.getElementById("gemini-tokens").textContent =
     geminiData.tokens.toLocaleString();
-  document.getElementById(
-    "gemini-bar"
-  ).style.width = `${geminiData.percentage}%`;
+  document.getElementById("gemini-bar").style.width =
+    `${geminiData.percentage}%`;
 
   // Update chart
   if (tokenChart) {
@@ -203,7 +201,7 @@ function addMessage(
   sender,
   modelUsed = null,
   routingReason = null,
-  motivationalFact = null
+  motivationalFact = null,
 ) {
   const messageDiv = document.createElement("div");
   messageDiv.className = `message ${sender}`;
@@ -237,9 +235,14 @@ function addMessage(
       gemini: "💬",
     };
 
+    const routeLabel = {
+      claude: "Coding Route",
+      gpt: "Teaching Route",
+      gemini: "General Route",
+    };
     badge.innerHTML = `${
       modelIcons[modelUsed] || "🤖"
-    } Powered by ${modelUsed.toUpperCase()}`;
+    } Powered by GROQ (${routeLabel[modelUsed] || "Smart Route"})`;
     metaDiv.appendChild(badge);
 
     messageDiv.appendChild(metaDiv);
@@ -356,7 +359,7 @@ async function sendMessage() {
         "assistant",
         data.model_used,
         data.routing_reason,
-        data.motivational_fact
+        data.motivational_fact,
       );
 
       conversationHistory.push({
@@ -379,7 +382,7 @@ async function sendMessage() {
       hideAnalyzing();
       addMessage(
         `Error: ${data.error || "Unknown error occurred"}`,
-        "assistant"
+        "assistant",
       );
     }
   } catch (error) {
@@ -387,7 +390,7 @@ async function sendMessage() {
     console.error("Error:", error);
     addMessage(
       "❌ Sorry, I encountered an error connecting to the server. Please make sure the backend is running and try again.",
-      "assistant"
+      "assistant",
     );
   } finally {
     sendBtn.disabled = false;
@@ -459,7 +462,7 @@ Let's start learning! What would you like to explore today? 🚀`,
     "assistant",
     null,
     null,
-    null
+    null,
   );
 
   userInput.focus();
