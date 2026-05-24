@@ -727,19 +727,6 @@ CodeCalm/
 - 🌐 **Environment Variables**: Sensitive data kept out of codebase
 - ✅ **Input Validation**: Server-side validation for all endpoints
 
----
-
-## 🌐 Deployment
-
-### **Deploy to Render**
-
-1. Create account at [render.com](https://render.com)
-2. Connect your GitHub repository
-3. Configure environment variables
-4. Deploy!
-
-See [DEPLOY_TO_RENDER.md](DEPLOY_TO_RENDER.md) for detailed instructions.
-
 ### **Environment Variables for Production**
 
 ```env
